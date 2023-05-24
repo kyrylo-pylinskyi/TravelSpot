@@ -1,4 +1,7 @@
-﻿namespace Api.Services
+﻿using Newtonsoft.Json.Linq;
+using System.Net.Http;
+
+namespace Api.Services
 {
     public static class GeoLocationService
     {
@@ -11,6 +14,8 @@
             // Create an HttpClient to send the request
             using (HttpClient client = new HttpClient())
             {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
+
                 // Send the GET request and retrieve the response
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
 
@@ -22,11 +27,14 @@
 
                     // Parse the JSON response
                     // Assuming you have Newtonsoft.Json NuGet package installed
-                    dynamic result = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
+                    JObject result = JObject.Parse(content);
 
-                    address.Add("Country", result.address.country);
-                    address.Add("City", result.address.city);
-                    address.Add("Street", result.address.road);
+                    address.Add("PlaceId", (string)result["place_id"] );
+                    address.Add("OsmId", (string)result["osm_id"]);
+                    address.Add("Country", (string)result["address"]["country"]);
+                    address.Add("City", (string)result["address"]["city"]);
+                    address.Add("State", (string)result["address"]["state"]);
+                    address.Add("Street", (string)result["address"]["road"]);
                 }
                 else
                 {

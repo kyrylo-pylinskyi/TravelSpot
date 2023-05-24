@@ -14,10 +14,18 @@ namespace Api.Controllers
         {
             _context = context;
         }
-        //[HttpPost]
-        //public async Task<IActionResult> CreateSpot(CreateSpotRequestDto request)
-        //{
+        [HttpPost]
+        public async Task<IActionResult> CreateSpot(CreateSpotRequestDto request)
+        {
+            Spot spot = new Spot
+            {
+                Name = request.SpotName,
+                Description = request.SpotDescription,
+            };
 
-        //}
+            _context.Spots.Add(spot);
+            _context.SaveChanges();
+            return Ok(spot);
+        }
     }
 }

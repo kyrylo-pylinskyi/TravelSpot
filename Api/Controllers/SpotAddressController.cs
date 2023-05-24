@@ -17,16 +17,20 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSpotAddress(CreateSpotAddressRequestDto request)
+        public async Task<IActionResult> CreateSpotAddress([FromForm]CreateSpotAddressRequestDto request)
         {
             var address = await GeoLocationService.GetAddress(request.Latitude, request.Longitude);
             var spotAddress = new SpotAddress
             {
+                PlaceId = address["PlaceId"],
+                OsmId = address["OsmId"],
                 Country = address["Country"],
+                State = address["State"],
                 City = address["City"],
                 Street = address["Street"],
                 Latitude = request.Latitude,
-                Longitude = request.Longitude
+                Longitude = request.Longitude,
+                SpotId = request.SpotId
             };
 
             _context.SpotAddresses.Add(spotAddress);

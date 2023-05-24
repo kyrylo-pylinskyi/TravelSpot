@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230524082229_Initial")]
+    [Migration("20230524142841_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -63,11 +63,9 @@ namespace Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Latitude")
@@ -76,11 +74,19 @@ namespace Api.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
+                    b.Property<string>("OsmId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlaceId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SpotId")
                         .HasColumnType("int");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -236,13 +242,11 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Entities.SpotAddress", b =>
                 {
-                    b.HasOne("Api.Models.Entities.Spot", "Spot")
+                    b.HasOne("Api.Models.Entities.Spot", null)
                         .WithMany("Address")
                         .HasForeignKey("SpotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Spot");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.SpotPhoto", b =>
