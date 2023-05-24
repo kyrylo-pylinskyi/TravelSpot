@@ -1,6 +1,6 @@
 ﻿namespace Api.Models.Entities
 {
-    public enum SpotRatings
+    public enum SpotRating
     {
         None = 0,
         OneStar = 1,

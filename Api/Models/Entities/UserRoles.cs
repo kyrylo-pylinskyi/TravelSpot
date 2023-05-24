@@ -1,6 +1,9 @@
 ﻿namespace Api.Models.Entities
 {
-    public class Roles
+    public enum UserRoles
     {
+        Guest,
+        Client,
+        Admin
     }
 }
