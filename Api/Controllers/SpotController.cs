@@ -36,13 +36,26 @@ namespace Api.Controllers
             var spots = await _context.Spots
                                 .Include(s => s.Addresses)
                                 .Include(s => s.Photos)
+                                .Include(s => s.Ratings)
+                                .Include(s => s.Tags)
+                                .ThenInclude(t => t.Tag)
+                                .Join(_context.SpotCategories, 
+                                        s => s.Id, sc => sc.SpotId,
+                                        (s, sc) => new
+                                        {
+                                            Spot = s,
+                                            Category = sc
+                                        })
                                 .Select(s => new SpotResponseDto
                                 {
-                                    Id = s.Id,
-                                    Name = s.Name,
-                                    Description = s.Description,
-                                    Addresses = SpotAddressResponseDto.CreateResponse(s.Addresses).ToList(),
-                                    Photos = SpotPhotoResponseDto.CreateResponse(s.Photos).ToList(),
+                                    Id = s.Spot.Id,
+                                    Name = s.Spot.Name,
+                                    Description = s.Spot.Description,
+                                    Tags = SpotTagResponseDto.CreateResponse(s.Spot.Tags).ToList(),
+                                    Category = SpotCategoryResponseDto.CreateResponse(s.Category),
+                                    Addresses = SpotAddressResponseDto.CreateResponse(s.Spot.Addresses).ToList(),
+                                    Ratings = SpotRatingResponseDto.CreateResponse(s.Spot.Ratings).ToList(),
+                                    Photos = SpotPhotoResponseDto.CreateResponse(s.Spot.Photos).ToList(),
                                 }).ToListAsync();
             return Ok(spots);
         }
