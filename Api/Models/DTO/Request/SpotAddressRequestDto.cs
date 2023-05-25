@@ -2,7 +2,7 @@
 
 namespace Api.Models.DTO.Request
 {
-    public class CreateSpotAddressRequestDto
+    public class SpotAddressRequestDto
     {
         public int SpotId { get; set; }
         public double Latitude { get; set; }

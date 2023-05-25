@@ -1,6 +1,16 @@
-﻿namespace Api.Models.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Api.Models.Entities
 {
-    public enum SpotRating
+    public class SpotRating
+    {
+        public int Id { get; set; }
+        public Rating Rating { get; set; }
+        public int SpotId { get; set; }
+        [ForeignKey(nameof(SpotId))]
+        public Spot Spot { get; set; }
+    }
+    public enum Rating
     {
         None = 0,
         OneStar = 1,

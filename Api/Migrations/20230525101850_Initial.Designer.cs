@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230524142841_Initial")]
+    [Migration("20230525101850_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,9 +33,6 @@ namespace Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -44,12 +41,7 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Rating")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("Spots");
                 });
@@ -112,7 +104,12 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SpotId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SpotId");
 
                     b.ToTable("SpotCategories");
                 });
@@ -137,6 +134,27 @@ namespace Api.Migrations
                     b.HasIndex("SpotId");
 
                     b.ToTable("SpotPhotos");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.SpotRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SpotId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpotId");
+
+                    b.ToTable("SpotRatings");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.SpotTag", b =>
@@ -180,7 +198,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.User", b =>
@@ -231,28 +249,43 @@ namespace Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.Spot", b =>
-                {
-                    b.HasOne("Api.Models.Entities.SpotCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Api.Models.Entities.SpotAddress", b =>
                 {
-                    b.HasOne("Api.Models.Entities.Spot", null)
-                        .WithMany("Address")
+                    b.HasOne("Api.Models.Entities.Spot", "Spot")
+                        .WithMany("Addresses")
                         .HasForeignKey("SpotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Spot");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.SpotCategory", b =>
+                {
+                    b.HasOne("Api.Models.Entities.Spot", "Spot")
+                        .WithMany()
+                        .HasForeignKey("SpotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Spot");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.SpotPhoto", b =>
                 {
                     b.HasOne("Api.Models.Entities.Spot", "Spot")
                         .WithMany("Photos")
+                        .HasForeignKey("SpotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Spot");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.SpotRating", b =>
+                {
+                    b.HasOne("Api.Models.Entities.Spot", "Spot")
+                        .WithMany("Ratings")
                         .HasForeignKey("SpotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -281,9 +314,11 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Entities.Spot", b =>
                 {
-                    b.Navigation("Address");
+                    b.Navigation("Addresses");
 
                     b.Navigation("Photos");
+
+                    b.Navigation("Ratings");
 
                     b.Navigation("Tags");
                 });

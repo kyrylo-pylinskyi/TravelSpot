@@ -17,7 +17,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSpotAddress([FromForm]CreateSpotAddressRequestDto request)
+        public async Task<IActionResult> CreateSpotAddress([FromForm]SpotAddressRequestDto request)
         {
             var address = await GeoLocationService.GetAddress(request.Latitude, request.Longitude);
             var spotAddress = new SpotAddress
@@ -33,8 +33,8 @@ namespace Api.Controllers
                 SpotId = request.SpotId
             };
 
-            _context.SpotAddresses.Add(spotAddress);
-            _context.SaveChanges();
+            await _context.SpotAddresses.AddAsync(spotAddress);
+            await _context.SaveChangesAsync();
 
             return Ok(spotAddress);
         }

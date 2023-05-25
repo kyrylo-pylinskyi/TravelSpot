@@ -1,7 +1,9 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request;
+using Api.Models.DTO.Response;
 using Api.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -15,7 +17,7 @@ namespace Api.Controllers
             _context = context;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateSpot(CreateSpotRequestDto request)
+        public async Task<IActionResult> CreateSpot([FromForm]SpotRequestDto request)
         {
             Spot spot = new Spot
             {
@@ -23,9 +25,26 @@ namespace Api.Controllers
                 Description = request.SpotDescription,
             };
 
-            _context.Spots.Add(spot);
-            _context.SaveChanges();
-            return Ok(spot);
+            await _context.Spots.AddAsync(spot);
+            await _context.SaveChangesAsync();
+            return Ok(new {SpotId = spot.Id, SpotName = spot.Name, SpotDescription = spot.Description});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSpots()
+        {
+            var spots = await _context.Spots
+                                .Include(s => s.Addresses)
+                                .Include(s => s.Photos)
+                                .Select(s => new SpotResponseDto
+                                {
+                                    Id = s.Id,
+                                    Name = s.Name,
+                                    Description = s.Description,
+                                    Addresses = SpotAddressResponseDto.CreateResponse(s.Addresses).ToList(),
+                                    Photos = SpotPhotoResponseDto.CreateResponse(s.Photos).ToList(),
+                                }).ToListAsync();
+            return Ok(spots);
         }
     }
 }

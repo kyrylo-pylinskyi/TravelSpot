@@ -2,10 +2,9 @@
 
 namespace Api.Models.DTO.Request
 {
-    public class CreateSpotRequestDto
+    public class SpotRequestDto
     {
         public string SpotName { get; set; }
         public string SpotDescription { get; set; }
-
     }
 }

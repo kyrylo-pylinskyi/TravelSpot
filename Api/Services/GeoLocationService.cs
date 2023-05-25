@@ -29,12 +29,27 @@ namespace Api.Services
                     // Assuming you have Newtonsoft.Json NuGet package installed
                     JObject result = JObject.Parse(content);
 
-                    address.Add("PlaceId", (string)result["place_id"] );
-                    address.Add("OsmId", (string)result["osm_id"]);
-                    address.Add("Country", (string)result["address"]["country"]);
-                    address.Add("City", (string)result["address"]["city"]);
-                    address.Add("State", (string)result["address"]["state"]);
-                    address.Add("Street", (string)result["address"]["road"]);
+                    address.Add("PlaceId", result.ContainsKey("place_id") ? (string)result["place_id"] : string.Empty);
+                    address.Add("OsmId", result.ContainsKey("osm_id") ? (string)result["osm_id"] : string.Empty);
+
+                    JToken addressToken;
+                    string country = string.Empty;
+                    string city = string.Empty;
+                    string state = string.Empty;
+                    string street = string.Empty;
+
+                    if (result.TryGetValue("address", out addressToken) && addressToken is JObject addressObject)
+                    {
+                        country = addressObject.ContainsKey("country") ? (string)addressObject["country"] : string.Empty;
+                        city = addressObject.ContainsKey("city") ? (string)addressObject["city"] : string.Empty;
+                        state = addressObject.ContainsKey("state") ? (string)addressObject["state"] : string.Empty;
+                        street = addressObject.ContainsKey("road") ? (string)addressObject["road"] : string.Empty;
+                    }
+
+                    address.Add("Country", country);
+                    address.Add("City", city);
+                    address.Add("State", state);
+                    address.Add("Street", street);
                 }
                 else
                 {

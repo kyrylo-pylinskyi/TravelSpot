@@ -14,5 +14,7 @@ namespace Api.Data
         public DbSet<SpotCategory> SpotCategories => Set<SpotCategory>();
         public DbSet<SpotPhoto> SpotPhotos => Set<SpotPhoto>();
         public DbSet<SpotTag> SpotTags => Set<SpotTag>();
+        public DbSet<Tag> Tags => Set<Tag>();
+        public DbSet<SpotRating> SpotRatings => Set<SpotRating>();
     }
 }
