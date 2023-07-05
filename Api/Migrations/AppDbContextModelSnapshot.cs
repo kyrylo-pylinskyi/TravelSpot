@@ -229,16 +229,15 @@ namespace Api.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("VerificationTokenSalt")
+                    b.Property<byte[]>("VerificationTokenHash")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<byte[]>("VeryficationTokenHash")
+                    b.Property<byte[]>("VerificationTokenSalt")
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");

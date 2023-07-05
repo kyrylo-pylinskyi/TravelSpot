@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230525101850_Initial")]
-    partial class Initial
+    [Migration("20230704074301_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -232,16 +232,15 @@ namespace Api.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("VerificationTokenSalt")
+                    b.Property<byte[]>("VerificationTokenHash")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<byte[]>("VeryficationTokenHash")
+                    b.Property<byte[]>("VerificationTokenSalt")
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");

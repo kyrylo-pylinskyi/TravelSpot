@@ -1,5 +1,7 @@
 using Api.Data;
+using Api.Services.Smtp;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,11 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+
+// Add the configuration for MailSettings
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
+builder.Services.AddTransient<IMailService, MailService>();
 
 var app = builder.Build();
 
