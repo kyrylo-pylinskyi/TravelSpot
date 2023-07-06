@@ -34,6 +34,7 @@ builder.Services.AddTransient<IMailService, MailService>();
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

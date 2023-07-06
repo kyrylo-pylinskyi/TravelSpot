@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Contracts;
 
-namespace Api.Models.DTO.Request.UserRequest
+namespace Api.Models.DTO.Request.Registration
 {
     public class RegisterRequest
     {
