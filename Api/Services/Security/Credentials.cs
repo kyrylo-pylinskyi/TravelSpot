@@ -12,7 +12,7 @@ namespace Api.Services.Security
         private const int keySize = 64;
         private const int iterations = 350000;
 
-        public static byte[] Hash(string password, out byte[] salt)
+        public static byte[] CreateHash(string password, out byte[] salt)
         {
             salt = RandomNumberGenerator.GetBytes(keySize);
 
@@ -26,7 +26,7 @@ namespace Api.Services.Security
             return hash;
         }
 
-        public static bool Verify(string password, byte[] hash, byte[] salt)
+        public static bool VerifyHash(string password, byte[] hash, byte[] salt)
         {
             var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, HashAlgorithmName.SHA512, keySize);
 

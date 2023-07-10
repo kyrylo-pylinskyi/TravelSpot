@@ -36,10 +36,10 @@ namespace Api.Controllers
             {
                 Name = request.Name,
                 Email = request.Email,
-                PasswordHash = Credentials.Hash(request.Password, out byte[] passwordSalt),
+                PasswordHash = Credentials.CreateHash(request.Password, out byte[] passwordSalt),
                 PasswordSalt = passwordSalt,
                 Role = UserRoles.Client,
-                VerificationTokenHash = Credentials.Hash(validationCode, out byte[] verificationSalt),
+                VerificationTokenHash = Credentials.CreateHash(validationCode, out byte[] verificationSalt),
                 VerificationTokenSalt = verificationSalt,
                 IsActive = false,
                 IsEmailVerified = false,
@@ -65,11 +65,11 @@ namespace Api.Controllers
         public async Task<IActionResult> ResendVerificationCode([FromForm] RegisterRequest request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (!Credentials.Verify(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!Credentials.VerifyHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 BadRequest("Bad credentials");
 
             string validationCode = Credentials.CreateVerificationCode();
-            user.VerificationTokenHash = Credentials.Hash(validationCode, out byte[] verificationSalt);
+            user.VerificationTokenHash = Credentials.CreateHash(validationCode, out byte[] verificationSalt);
             user.VerificationTokenSalt = verificationSalt;
             await _context.SaveChangesAsync();
 
@@ -93,7 +93,7 @@ namespace Api.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            if (!Credentials.Verify(request.Code, user.VerificationTokenHash, user.VerificationTokenSalt))
+            if (!Credentials.VerifyHash(request.Code, user.VerificationTokenHash, user.VerificationTokenSalt))
                 return BadRequest("Invalid code");
 
             user.VerificationTokenHash = null;

@@ -2,7 +2,6 @@
 using Api.Models.DTO.Request.Login;
 using Api.Services.Security;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 namespace Api.Controllers
 {
@@ -22,7 +21,7 @@ namespace Api.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user == null)
                 return BadRequest("user not found");
-            if (!Credentials.Verify(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!Credentials.VerifyHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 return BadRequest("password is not correct");
 
             return Ok(Credentials.CreateJwt(user));
