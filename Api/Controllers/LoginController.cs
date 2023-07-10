@@ -1,7 +1,9 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request.Login;
 using Api.Services.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace Api.Controllers
 {
@@ -26,5 +28,9 @@ namespace Api.Controllers
 
             return Ok(Credentials.CreateJwt(user));
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Auth() => Ok("Auth action");
     }
 }
