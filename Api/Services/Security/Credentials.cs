@@ -1,4 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using Api.Models.Entities;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Api.Services.Security
@@ -31,5 +35,22 @@ namespace Api.Services.Security
 
         public static string CreateVerificationCode() =>
             Convert.ToHexString(RandomNumberGenerator.GetBytes(3));
+
+        public static string CreateJwt(User user)
+        {
+            var claims = new List<Claim> { 
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+            // создаем JWT-токен
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
     }
 }
