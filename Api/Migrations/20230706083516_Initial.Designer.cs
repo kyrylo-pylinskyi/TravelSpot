@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230525101850_Initial")]
+    [Migration("20230706083516_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -232,16 +232,15 @@ namespace Api.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("VerificationTokenSalt")
+                    b.Property<byte[]>("VerificationTokenHash")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<byte[]>("VeryficationTokenHash")
+                    b.Property<byte[]>("VerificationTokenSalt")
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
