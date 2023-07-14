@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TravelSpotApp",
-    "slug": "TravelSpotApp",
+    "slug": "travelspotapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gxrcondeau.travelspotapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a183dacc-52ae-40a9-810b-4f4df3c98c21"
+      }
+    },
+    "owner": "gxrcondeau"
   }
 }

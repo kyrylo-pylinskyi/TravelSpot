@@ -31,6 +31,11 @@ export const ButtonWrapper = styled.Pressable`
                 background: transparent;
                 color: blue;
             `
+        : props.disabled === true ? 
+            `
+                background: rgba(106, 112, 124, 0.5);
+                opacity: 0.5;
+            `
         :
             `
                 background: #ffffff;
@@ -42,7 +47,7 @@ export const ButtonWrapper = styled.Pressable`
 
 export const ButtonText = styled.Text`
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 400;
     ${props => 
         props.type === 'primary' ? 
             `

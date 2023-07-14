@@ -2,12 +2,12 @@ import {Alert} from 'react-native';
 import { Title } from '../elements/typography';
 import CustomBtn from '../elements/Buttons/CustomBtn';
 import { StyledInput } from '../elements/inputs'
-
-import { greetingList } from '../../utils/greetingList';
 import Separator from '../elements/Separator/Separator';
 
-const Login = ({setAuthAction}) => {
-    let greetingText = greetingList[Math.floor(Math.random()*greetingList.length)];
+import { registrationGreetingList } from '../../utils/greetingList';
+
+const Registration = ({setAuthAction}) => {
+    let greetingText = registrationGreetingList[Math.floor(Math.random()*registrationGreetingList.length)];
 
     return(
         <>
@@ -15,22 +15,21 @@ const Login = ({setAuthAction}) => {
                 {greetingText}
             </Title>
             <StyledInput
-                placeholder='Enter your username'
+                placeholder='Username'
             />
             <StyledInput
-                placeholder='Enter your password'
+                placeholder='Email'
+            />
+            <StyledInput
+                placeholder='Password'
+            />
+            <StyledInput
+                placeholder='Confirm password'
             />
             <CustomBtn 
                 title="Login" 
                 action={() => Alert.alert('Login attempt')}
                 type="primary"
-            />
-            <CustomBtn 
-                p='0'
-                halign='right'
-                title="Forgot password?" 
-                action={() => Alert.alert('Login attempt')}
-                type="text"
             />
             <Separator text='Or login with'/>
             <CustomBtn 
@@ -42,11 +41,11 @@ const Login = ({setAuthAction}) => {
             <CustomBtn 
                 p='0'
                 halign='center'
-                title="Don’t have an account? Register Now" 
-                action={() => setAuthAction('registration')}
+                title="Already have an account? Login Now" 
+                action={() => setAuthAction('login')}
                 type="text"
             />
         </>
     );
 }
-export default Login;
+export default Registration;

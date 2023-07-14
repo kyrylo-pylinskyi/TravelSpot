@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { View } from 'react-native';
 
-export const StyledLoginPageWrapper = styled.View`
+export const StyledAuthPageWrapper = styled.View`
     height: 100%;
     max-width: 90%;
     width: 100%;

@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-import LoginPage from './pages/LoginPage/LoginPage';
+import AuthPage from './pages/AuthPage/AuthPage';
 
 export default function App() {
   return (
-    <LoginPage/>
+      <AuthPage/>
   );
 }
