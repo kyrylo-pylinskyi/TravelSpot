@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models.DTO.Request.Registration
+namespace Api.Models.DTO.Request.Authorization.Registration
 {
     public class ConfirmEmailRequest
     {

@@ -1,16 +1,17 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request;
-using Api.Models.DTO.Request.Registration;
+using Api.Models.DTO.Request.Authorization.Registration;
 using Api.Models.Entities;
 using Api.Services.Security;
 using Api.Services.Smtp;
 using Api.Services.Smtp.Request;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Api.Controllers
+namespace Api.Controllers.Authorization
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -28,7 +29,7 @@ namespace Api.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromForm] RegisterRequest request)
         {
-            if(await _context.Users.AnyAsync(u => u.Email == request.Email))
+            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
                 return BadRequest("This email address is used by another user");
 
             string validationCode = Credentials.CreateVerificationCode();

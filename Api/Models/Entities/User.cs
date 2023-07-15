@@ -1,4 +1,6 @@
-﻿namespace Api.Models.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Api.Models.Entities
 {
     public class User
     {

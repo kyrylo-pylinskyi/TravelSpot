@@ -39,8 +39,8 @@ namespace Api.Services.Security
         public static string CreateJwt(User user)
         {
             var claims = new List<Claim> { 
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email)
+                //new Claim(ClaimTypes.Name, user.Name),
+                //new Claim(ClaimTypes.Email, user.Email)
             };
             // создаем JWT-токен
             var jwt = new JwtSecurityToken(
