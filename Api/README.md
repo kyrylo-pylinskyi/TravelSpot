@@ -10,9 +10,6 @@ To setup the project database you need to follow these steps:
    
   5. After database is configured you should add migrations to the project with this commands:
 
-    dotnet ef migrations add Initial -c AppDbContext
-    dotnet ef database update -c AppDbContext
-
-    dotnet ef migrations add Identity -c AppIdentityDbContext
+    dotnet ef migrations add Initial
 
 After this steps database would be created and you can use it.
