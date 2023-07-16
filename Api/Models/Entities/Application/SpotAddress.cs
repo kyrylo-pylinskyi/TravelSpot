@@ -2,7 +2,7 @@
 using System.Diagnostics.Metrics;
 using System.Drawing;
 
-namespace Api.Models.Entities
+namespace Api.Models.Entities.Application
 {
     public class SpotAddress
     {

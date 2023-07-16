@@ -1,7 +1,7 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request;
 using Api.Models.DTO.Response;
-using Api.Models.Entities;
+using Api.Models.Entities.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

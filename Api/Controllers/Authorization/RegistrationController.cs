@@ -1,7 +1,7 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request;
 using Api.Models.DTO.Request.Authorization.Registration;
-using Api.Models.Entities;
+using Api.Models.Entities.Application;
 using Api.Services.Security;
 using Api.Services.Smtp;
 using Api.Services.Smtp.Request;

@@ -1,14 +1,20 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 using System.Text;
 
 namespace Api.Services.Security
 {
     public class AuthOptions
     {
-        public const string ISSUER = "TravelSpotApi"; 
-        public const string AUDIENCE = "TravelSpotClient"; 
-        const string KEY = "travelspot_supersecret_secretkey!123";  
-        public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
+        public string Key { get; set; }
+        public double ExpirationHours { get; internal set; }
+
+        public SymmetricSecurityKey GetSymmetricSecurityKey() =>
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key));
+
+        public TimeSpan GetExpirationTimeSpan() =>
+            TimeSpan.FromHours(ExpirationHours);
     }
 }

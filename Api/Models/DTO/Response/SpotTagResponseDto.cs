@@ -1,5 +1,5 @@
 ﻿using Api.Data;
-using Api.Models.Entities;
+using Api.Models.Entities.Application;
 
 namespace Api.Models.DTO.Response
 {
