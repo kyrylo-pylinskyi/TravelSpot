@@ -1,14 +1,20 @@
-﻿using Api.Models.Entities;
+﻿using Api.Models.Entities.Application;
+using Api.Models.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options) { }
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<UserPhoto> UserPhotos => Set<UserPhoto>();
         public DbSet<Spot> Spots => Set<Spot>();
         public DbSet<SpotAddress> SpotAddresses => Set<SpotAddress>();
         public DbSet<SpotCategory> SpotCategories => Set<SpotCategory>();

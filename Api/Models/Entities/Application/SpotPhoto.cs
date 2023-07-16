@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Api.Models.Entities
+namespace Api.Models.Entities.Application
 {
     public class SpotPhoto
     {

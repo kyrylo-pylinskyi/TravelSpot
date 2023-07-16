@@ -1,6 +1,6 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request;
-using Api.Models.Entities;
+using Api.Models.Entities.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
