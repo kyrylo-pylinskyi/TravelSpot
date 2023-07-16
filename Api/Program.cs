@@ -1,18 +1,29 @@
 ﻿using Api.Data;
+using Api.Models.Entities;
 using Api.Services.Security;
 using Api.Services.Smtp;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Configuration;
 
+//Initialize builder
 var builder = WebApplication.CreateBuilder(args);
+
+//Web application provider and configuration
+var provider = builder.Services.BuildServiceProvider();
+var configuration = provider.GetRequiredService<IConfiguration>();
+
+//Web application db connection string
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -39,17 +50,27 @@ builder.Services.AddSwaggerGen(options =>
     //options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("openstreetmap", builder =>
+    var client = configuration.GetValue<string>("Client");
+    var osm = configuration.GetValue<string>("OpenStreetMap");
+
+    options.AddPolicy("OpenStreetMap", builder =>
     {
-        builder.WithOrigins("https://nominatim.openstreetmap.org")
+        builder.WithOrigins(osm)
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+
+    options.AddPolicy("TravelSpotApp", builder =>
+    {
+        builder.WithOrigins(client)
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
@@ -81,6 +102,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             // валидация ключа безопасности
             ValidateIssuerSigningKey = true,
         };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = "756512269430-nsemobm9quvtn8tgu07qh6roh2kleqdq.apps.googleusercontent.com";
+        options.ClientSecret = "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";
     });
 
 var app = builder.Build();
@@ -97,7 +123,8 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseCors("openstreetmap"); // Move the UseCors middleware after UseRouting
+app.UseCors("OpenStreetMap");
+app.UseCors("TravelSpotApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
