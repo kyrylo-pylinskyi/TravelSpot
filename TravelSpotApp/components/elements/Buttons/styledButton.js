@@ -48,6 +48,7 @@ export const ButtonWrapper = styled.Pressable`
 export const ButtonText = styled.Text`
     font-size: 15px;
     font-weight: 400;
+    color: ${props => props.color ? props.color : '#6a707c'};
     ${props => 
         props.type === 'primary' ? 
             `
@@ -61,7 +62,6 @@ export const ButtonText = styled.Text`
             `
                 font-weight: 600;
                 font-size: 14px;
-                color: #6a707c;
             `
         :
             `

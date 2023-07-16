@@ -1,7 +1,7 @@
-import Login from '../../components/Login/Login';
-import Registration from '../../components/Login/Registration';
 import { useState } from 'react';
 
+import Login from '../../components/Login/Login';
+import Registration from '../../components/Login/Registration';
 import { StyledAuthPageWrapper } from '../../components/Login/styledAuth';
 
 const AuthPage = () => {

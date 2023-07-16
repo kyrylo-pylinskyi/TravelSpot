@@ -1,4 +1,5 @@
 import { Text } from "react-native";
+
 import { StyledSeparatorWrapper, StyledSeparatorContent, StyledSeparatorLine } from "./styledSeparator";
 
 const Separator = ({text}) => {

@@ -1,9 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-
 import AuthPage from './pages/AuthPage/AuthPage';
+import MapPage from './pages/MapPage/MapPage';
 
 export default function App() {
   return (
-      <AuthPage/>
-  );
+      <MapPage/>
+    );
 }

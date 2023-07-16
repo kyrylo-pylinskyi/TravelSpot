@@ -1,10 +1,11 @@
 import {Alert} from 'react-native';
-import { Title } from '../elements/typography';
+
 import CustomBtn from '../elements/Buttons/CustomBtn';
+import Separator from '../elements/Separator/Separator';
+import { Title } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
 
 import { greetingList } from '../../utils/greetingList';
-import Separator from '../elements/Separator/Separator';
 
 const Login = ({setAuthAction}) => {
     let greetingText = greetingList[Math.floor(Math.random()*greetingList.length)];
@@ -40,7 +41,8 @@ const Login = ({setAuthAction}) => {
                 action={() => Alert.alert('Google login attempt')}
             />
             <CustomBtn 
-                p='0'
+                p='15px 0 0 0'
+                color='#518ef8'
                 halign='center'
                 title="Don’t have an account? Register Now" 
                 action={() => setAuthAction('registration')}

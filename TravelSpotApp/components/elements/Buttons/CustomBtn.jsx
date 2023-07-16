@@ -1,7 +1,8 @@
-import { ButtonWrapper, ButtonText } from './styledButton';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const CustomBtn = ({title, action, type, icon, halign, p, iconColor, disabled}) => {
+import { ButtonWrapper, ButtonText } from './styledButton';
+
+const CustomBtn = ({title, action, type, icon, halign, p, iconColor, disabled, color, onPress}) => {
     return(
         <ButtonWrapper
             p={p}
@@ -10,10 +11,12 @@ const CustomBtn = ({title, action, type, icon, halign, p, iconColor, disabled}) 
             type={type}
             icon={icon}
             disabled={disabled ? disabled : false}
+            onPressOut={onPress}
         >
             {title &&
                 <ButtonText
                     type={type}
+                    color={color}
                 >
                     {title}
                 </ButtonText> 
