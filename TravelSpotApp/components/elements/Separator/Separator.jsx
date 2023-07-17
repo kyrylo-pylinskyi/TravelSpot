@@ -2,7 +2,7 @@ import { Text } from "react-native";
 
 import { StyledSeparatorWrapper, StyledSeparatorContent, StyledSeparatorLine } from "./styledSeparator";
 
-const Separator = ({text}) => {
+const StyledSeparator = ({text}) => {
     return(
         <StyledSeparatorWrapper>
             <StyledSeparatorLine/>
@@ -14,4 +14,4 @@ const Separator = ({text}) => {
     )
 }
 
-export default Separator;
+export default StyledSeparator;

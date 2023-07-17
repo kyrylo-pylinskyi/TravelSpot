@@ -2,7 +2,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 import { ButtonWrapper, ButtonText } from './styledButton';
 
-const CustomBtn = ({title, action, type, icon, halign, p, iconColor, disabled, color, onPress}) => {
+const StyledBtn = ({title, action, type, icon, halign, p, iconColor, disabled, color, onPress}) => {
     return(
         <ButtonWrapper
             p={p}
@@ -28,4 +28,4 @@ const CustomBtn = ({title, action, type, icon, halign, p, iconColor, disabled, c
     )
 }
 
-export default CustomBtn;
+export default StyledBtn;

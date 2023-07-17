@@ -5,9 +5,9 @@ import FormData from 'form-data';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 
-import CustomBtn from '../elements/Buttons/CustomBtn';
-import Separator from '../elements/Separator/Separator';
-import { Title } from '../elements/typography';
+import StyledBtn from '../elements/Buttons/StyledButton';
+import StyledSeparator from '../elements/Separator/Separator';
+import { StyledTitle } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
 
 const Registration = ({setAuthAction}) => {
@@ -37,13 +37,17 @@ const Registration = ({setAuthAction}) => {
                     console.log('Error ', error.message);
                 }
             })
+            .then((response) => {
+                response.status === 200 ? setAuthAction('psswdConfirmation')
+                : console.log('Not working sorry')
+            })
      }
 
     return(
         <>
-            <Title>
+            <StyledTitle>
                 Registration
-            </Title>
+            </StyledTitle>
             <StyledInput
                 placeholder='Username'
                 onChange={value => changeHandler(value, 'username')}
@@ -63,19 +67,19 @@ const Registration = ({setAuthAction}) => {
                 placeholder='Confirm password'
                 onChange={value => changeHandler(value, 'confirmPsswd')}
             />
-            <CustomBtn 
+            <StyledBtn 
                 title="Register" 
                 action={() => submitData()}
                 type="primary"
             />
-            <Separator text='Or login with'/>
-            <CustomBtn 
+            <StyledSeparator text='Or login with'/>
+            <StyledBtn 
                 disabled={true}
                 iconColor='#518ef8'
                 icon='google'
                 action={() => Alert.alert('Google login attempt')}
             />
-            <CustomBtn 
+            <StyledBtn 
                 p='15px 0 0 0'
                 color='#518ef8'
                 halign='center'

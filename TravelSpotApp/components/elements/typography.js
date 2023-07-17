@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import { Text } from 'react-native';
 
-export const Title = styled.Text`
+export const StyledTitle = styled.Text`
     max-width: 330px;
     width: 100%;
     margin-bottom: 10px;
