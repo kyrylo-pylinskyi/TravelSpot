@@ -6,7 +6,7 @@ namespace Api.Services.TokenProviders
     {
         public EmailConfirmationTokenProviderOptions()
         {
-            TokenLifespan = TimeSpan.FromDays(3); // Set the desired token lifespan
+            TokenLifespan = TimeSpan.FromMinutes(15); // Set the desired token lifespan
         }
     }
 }
