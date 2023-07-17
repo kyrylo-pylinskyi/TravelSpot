@@ -11,6 +11,5 @@ export const StyledTopbar = styled.View`
     justify-content: space-between;
     position: absolute;
     top: 0;
-    background: #ffffff;
     z-index: 1000;
 `
