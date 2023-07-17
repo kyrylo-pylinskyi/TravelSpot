@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { useState } from 'react';
 import {Alert} from 'react-native';
+import FormData from 'form-data';
+
+import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 
 import CustomBtn from '../elements/Buttons/CustomBtn';
 import Separator from '../elements/Separator/Separator';
 import { Title } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
 
-import { registrationGreetingList } from '../../utils/greetingList';
-
 const Registration = ({setAuthAction}) => {
-    let greetingText = registrationGreetingList[Math.floor(Math.random()*registrationGreetingList.length)];
     const [authData, setAuthData] = useState({username: '', email: '', psswd: '', confirmPsswd: ''}) 
 
     const changeHandler = (value, name) => {
@@ -18,15 +18,31 @@ const Registration = ({setAuthAction}) => {
      }
 
      const submitData = () => {
-        axios.post('https://localhost:7018/api/Registration/register', {Email: authData.email, Name: authData.username, Password: authData.psswd, PasswordConfirm: authData.confirmPsswd})
-        .then(Response => console.log(Response))
-        .catch(error=>console.log(error))
+        const form = new FormData();
+        form.append('Name', authData.username);
+        form.append('Email', authData.email);
+        form.append('Password', authData.psswd);
+        form.append('PasswordConfirm', authData.confirmPsswd);
+        axios.post(devProxy + '/api/IdentityRegistration', form, axiosConfig )
+            .catch((error) => {
+                if(error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                }
+                else if (error.request) {
+                    console.log(error.request);
+                }
+                else {
+                    console.log('Error ', error.message);
+                }
+            })
      }
 
     return(
         <>
             <Title>
-                {greetingText}
+                Registration
             </Title>
             <StyledInput
                 placeholder='Username'
@@ -48,7 +64,7 @@ const Registration = ({setAuthAction}) => {
                 onChange={value => changeHandler(value, 'confirmPsswd')}
             />
             <CustomBtn 
-                title="Login" 
+                title="Register" 
                 action={() => submitData()}
                 type="primary"
             />

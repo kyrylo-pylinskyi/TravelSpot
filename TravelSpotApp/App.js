@@ -3,6 +3,6 @@ import MapPage from './pages/MapPage/MapPage';
 
 export default function App() {
   return (
-      <MapPage/>
+      <AuthPage/>
     );
 }

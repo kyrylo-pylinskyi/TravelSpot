@@ -86,6 +86,7 @@ builder.Services.AddCors(options =>
 {
     var client = configuration.GetValue<string>("Client");
     var osm = configuration.GetValue<string>("OpenStreetMap");
+    var postman = configuration.GetValue<string>("Postman");
 
     options.AddPolicy("OpenStreetMap", builder =>
     {
@@ -137,6 +138,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+app.UseHttpLogging();
 
 
 // Configure the HTTP request pipeline.
