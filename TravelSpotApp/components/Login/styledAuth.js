@@ -10,4 +10,5 @@ export const StyledAuthPageWrapper = styled.View`
     background: #ffffff;
     justify-content: center;
     align-items: center;
+    position: relative;
 `;

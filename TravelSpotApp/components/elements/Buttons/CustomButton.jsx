@@ -1,4 +1,4 @@
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { ButtonWrapper, ButtonText } from './styledButton';
 

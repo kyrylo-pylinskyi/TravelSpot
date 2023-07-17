@@ -6,7 +6,7 @@ import FormData from 'form-data';
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 import { greetingList } from '../../utils/greetingList';
 
-import StyledBtn from '../elements/Buttons/StyledButton';
+import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
 import { StyledTitle } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
@@ -51,7 +51,7 @@ const Login = ({setAuthAction}) => {
                 {greetingText}
             </StyledTitle>
             <StyledInput
-                placeholder='Enter your username'
+                placeholder='Enter your email'
                 onChange={value => changeHandler(value, 'username')}
             />
             <StyledInput
@@ -65,18 +65,17 @@ const Login = ({setAuthAction}) => {
                 type="primary"
             />
             <StyledBtn 
-                disabled={true}
                 p='0'
                 halign='right'
                 title="Forgot password?" 
-                action={() => Alert.alert('Login attempt')}
+                action={() => setAuthAction('psswdRecovery')}
                 type="text"
             />
-            <StyledSeparator text='Or login with'/>
+            <StyledSeparator text='Or Login with'/>
             <StyledBtn 
                 disabled={true}
                 iconColor='#518ef8'
-                icon='google'
+                icon='logo-google'
                 action={() => Alert.alert('Google login attempt')}
             />
             <StyledBtn 

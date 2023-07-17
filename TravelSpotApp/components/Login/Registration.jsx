@@ -5,10 +5,11 @@ import FormData from 'form-data';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 
-import StyledBtn from '../elements/Buttons/StyledButton';
+import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
 import { StyledTitle } from '../elements/typography';
-import { StyledInput } from '../elements/inputs'
+import { StyledInput } from '../elements/inputs';
+import StyledTopBar from "../elements/Topbar/Topbar";
 
 const Registration = ({setAuthAction}) => {
     const [authData, setAuthData] = useState({username: '', email: '', psswd: '', confirmPsswd: ''}) 
@@ -45,7 +46,13 @@ const Registration = ({setAuthAction}) => {
 
     return(
         <>
-            <StyledTitle>
+            <StyledTopBar 
+                backBtn 
+                backAction={() => setAuthAction('login')}
+            />
+            <StyledTitle
+                p='60px 0 0 0'
+            >
                 Registration
             </StyledTitle>
             <StyledInput
@@ -76,7 +83,7 @@ const Registration = ({setAuthAction}) => {
             <StyledBtn 
                 disabled={true}
                 iconColor='#518ef8'
-                icon='google'
+                icon='logo-google'
                 action={() => Alert.alert('Google login attempt')}
             />
             <StyledBtn 

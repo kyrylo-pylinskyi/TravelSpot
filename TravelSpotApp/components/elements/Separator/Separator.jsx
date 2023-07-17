@@ -6,7 +6,7 @@ const StyledSeparator = ({text}) => {
     return(
         <StyledSeparatorWrapper>
             <StyledSeparatorLine/>
-            <StyledSeparatorContent>
+            <StyledSeparatorContent style={{fontFamily: 'Urbanist_600SemiBold'}}>
                 {text}
             </StyledSeparatorContent>
             <StyledSeparatorLine/>
