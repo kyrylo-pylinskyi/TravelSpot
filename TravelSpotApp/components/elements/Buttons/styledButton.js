@@ -18,18 +18,16 @@ export const ButtonWrapper = styled.Pressable`
         props.type === 'primary' ? 
             `
                 background: #1e232c;
-                color: white;
 
             `
         : props.type === 'secondary' ? 
             `
-                background: blue;
-                color: white;
+                background: #FFFFFF;
+                border: 1px solid #1E232C;
             `
         : props.type === 'text' ? 
             `
                 background: transparent;
-                color: blue;
             `
         : props.type === 'nav' ? 
             `
@@ -37,7 +35,6 @@ export const ButtonWrapper = styled.Pressable`
                 height: 40px;
                 padding: 6px;
                 background: transparent;
-                color: blue;
                 border: 1px solid #E8ECF4;
                 border-radius: 12px;
             `
@@ -62,11 +59,11 @@ export const ButtonText = styled.Text`
     ${props => 
         props.type === 'primary' ? 
             `
-                color: white;
+                color: #FFFFFF;
             `
         : props.type === 'secondary' ? 
             `
-                color: white;
+                color: #1E232C;
             `
         : props.type === 'text' ? 
             `

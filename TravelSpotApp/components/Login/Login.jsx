@@ -1,21 +1,18 @@
 import axios from 'axios';
 import { useState } from 'react';
-import {Alert, Easing} from 'react-native';
+import {Alert} from 'react-native';
 import FormData from 'form-data';
-import TextTicker from 'react-native-text-ticker';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
-import { greetingList } from '../../utils/greetingList';
 
+import StyledTopBar from '../elements/Topbar/Topbar';
 import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
-import { StyledTitle, StyledTitleItalic } from '../elements/typography';
+import { StyledTitle } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
 
-const Login = ({setAuthAction}) => {
+const Login = ({setAuthAction, setCurrentPage}) => {
     const [authData, setAuthData] = useState({username: '', psswd: ''}) 
-
-    let greetingText = greetingList[Math.floor(Math.random()*greetingList.length)];
 
     const changeHandler = (value, name) => {
         setAuthData({...authData, [name]: value.nativeEvent.text})
@@ -47,40 +44,13 @@ const Login = ({setAuthAction}) => {
 
     return(
         <>
-            <TextTicker
-                style={{paddingBottom: 0}}
-                scrollSpeed={16}
-                loop
-                repeatSpacer={10}
-                easing={Easing.linear}
-            >
-                <StyledTitle>
-                    {greetingText}
-                </StyledTitle>
-            </TextTicker>
-            <TextTicker
-                style={{paddingBottom: 0}}
-                scrollSpeed={15}
-                loop
-                repeatSpacer={10}
-                easing={Easing.linear}
-            >
-                <StyledTitleItalic>
-                    {greetingText}
-                </StyledTitleItalic>
-
-            </TextTicker>
-            <TextTicker
-                style={{paddingBottom: 30}}
-                scrollSpeed={17}
-                loop
-                repeatSpacer={10}
-                easing={Easing.linear}
-            >
-                <StyledTitle>
-                    {greetingText}
-                </StyledTitle>
-            </TextTicker>
+            <StyledTopBar 
+                backBtn 
+                backAction={() => setCurrentPage('greeting')}
+            />
+            <StyledTitle>
+                Login
+            </StyledTitle>
             <StyledInput
                 placeholder='Enter your email'
                 onChange={value => changeHandler(value, 'username')}
@@ -105,13 +75,13 @@ const Login = ({setAuthAction}) => {
             <StyledSeparator text='Or Login with'/>
             <StyledBtn 
                 disabled={true}
-                iconColor='#518ef8'
+                iconColor='#518EF8'
                 icon='logo-google'
                 action={() => Alert.alert('Google login attempt')}
             />
             <StyledBtn 
                 p='15px 0 0 0'
-                color='#518ef8'
+                color='#518EF8'
                 halign='center'
                 title="Don’t have an account? Register Now" 
                 action={() => setAuthAction('registration')}

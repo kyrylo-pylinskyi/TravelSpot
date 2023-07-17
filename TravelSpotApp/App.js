@@ -1,4 +1,5 @@
-import AuthPage from './pages/AuthPage/AuthPage';
+import { useState } from 'react';
+import AuthPage from './screens/AuthPage/AuthPage';
 import { MainView } from './components/style';
 import { 
   useFonts, 
@@ -9,8 +10,10 @@ import {
   Urbanist_600SemiBold_Italic,
   Urbanist_700Bold_Italic
 } from '@expo-google-fonts/urbanist'
+import GreetingPage from './screens/GreetingPage/GreetingPage';
 
 export default function App() {
+  const [currentPage, setCurrentPage] = useState('greeting');
 
   let [fontsLoaded] = useFonts({
     Urbanist_400Regular,
@@ -27,7 +30,11 @@ export default function App() {
 
   return (
     <MainView>
-      <AuthPage/>
+      {
+        currentPage === 'greeting' ? <GreetingPage setCurrentPage={setCurrentPage}/>
+        : currentPage === 'login' || currentPage === 'registration' ? <AuthPage basicAction={currentPage} setCurrentPage={setCurrentPage} />
+        : <></>
+      }
     </MainView>
     );
 }

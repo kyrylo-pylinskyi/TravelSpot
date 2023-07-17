@@ -11,7 +11,7 @@ import { StyledTitle } from '../elements/typography';
 import { StyledInput } from '../elements/inputs';
 import StyledTopBar from "../elements/Topbar/Topbar";
 
-const Registration = ({setAuthAction}) => {
+const Registration = ({setAuthAction, setCurrentPage}) => {
     const [authData, setAuthData] = useState({username: '', email: '', psswd: '', confirmPsswd: ''}) 
 
     const changeHandler = (value, name) => {
@@ -48,7 +48,7 @@ const Registration = ({setAuthAction}) => {
         <>
             <StyledTopBar 
                 backBtn 
-                backAction={() => setAuthAction('login')}
+                backAction={() => setCurrentPage('greeting')}
             />
             <StyledTitle
                 p='60px 0 0 0'

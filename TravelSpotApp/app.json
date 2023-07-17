@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "TravelSpotApp",
+    "name": "Travel Spot",
     "slug": "travelspotapp",
-    "version": "1.0.0",
+    "version": "1.1.0a",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
