@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { useState } from 'react';
-import {Alert} from 'react-native';
+import {Alert, Easing} from 'react-native';
 import FormData from 'form-data';
+import TextTicker from 'react-native-text-ticker';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 import { greetingList } from '../../utils/greetingList';
 
 import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
-import { StyledTitle } from '../elements/typography';
+import { StyledTitle, StyledTitleItalic } from '../elements/typography';
 import { StyledInput } from '../elements/inputs'
-
 
 const Login = ({setAuthAction}) => {
     const [authData, setAuthData] = useState({username: '', psswd: ''}) 
@@ -47,9 +47,40 @@ const Login = ({setAuthAction}) => {
 
     return(
         <>
-            <StyledTitle>
-                {greetingText}
-            </StyledTitle>
+            <TextTicker
+                style={{paddingBottom: 0}}
+                scrollSpeed={16}
+                loop
+                repeatSpacer={10}
+                easing={Easing.linear}
+            >
+                <StyledTitle>
+                    {greetingText}
+                </StyledTitle>
+            </TextTicker>
+            <TextTicker
+                style={{paddingBottom: 0}}
+                scrollSpeed={15}
+                loop
+                repeatSpacer={10}
+                easing={Easing.linear}
+            >
+                <StyledTitleItalic>
+                    {greetingText}
+                </StyledTitleItalic>
+
+            </TextTicker>
+            <TextTicker
+                style={{paddingBottom: 30}}
+                scrollSpeed={17}
+                loop
+                repeatSpacer={10}
+                easing={Easing.linear}
+            >
+                <StyledTitle>
+                    {greetingText}
+                </StyledTitle>
+            </TextTicker>
             <StyledInput
                 placeholder='Enter your email'
                 onChange={value => changeHandler(value, 'username')}

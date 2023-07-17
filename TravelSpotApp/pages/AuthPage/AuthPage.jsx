@@ -8,7 +8,7 @@ import PasswordRecovery from '../../components/Login/PasswordRecovery';
 
 const AuthPage = () => {
 
-    const [authAction, setAuthAction] = useState('psswdRecovery')
+    const [authAction, setAuthAction] = useState('login')
 
     return(
         <StyledAuthPageWrapper>

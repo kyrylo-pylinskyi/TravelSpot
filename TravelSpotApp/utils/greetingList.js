@@ -1,9 +1,8 @@
 export const greetingList = [
     "Welcome back, space cowboy!",
     "Welcome back, space samurai!",
-    "Oh, senpai! You again?",
+    "Oh, senpai! You again? It's nice to see you!",
     "Welcome back my dear friend!",
-    "Hello @user"
 ]
 
 export const registrationGreetingList = [

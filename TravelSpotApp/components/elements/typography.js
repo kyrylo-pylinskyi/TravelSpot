@@ -9,7 +9,16 @@ export const StyledTitle = styled.Text`
     margin-bottom: 10px;
     font-size: 30px;
     color: #1E232C;
-    font-family: 'Urbanist_700Bold';
+    font-family: 'Urbanist_600SemiBold';
+`
+export const StyledTitleItalic = styled.Text`
+    padding: ${props => props.p ? props.p : '0'};
+    max-width: 330px;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 30px;
+    color: #1E232C;
+    font-family: 'Urbanist_600SemiBold_Italic';
 `
 
 export const StyledText = styled.Text`
