@@ -1,16 +1,12 @@
 ﻿using Api.Models.DTO.Request.Authorization.Login;
-using Api.Models.DTO.Request.Authorization.ResetPassword;
-using Api.Models.Entities.Application;
 using Api.Models.Entities.Identity;
 using Api.Services.Security;
 using Api.Services.Smtp;
 using Api.Services.Smtp.Request;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -19,14 +15,14 @@ namespace Api.Controllers.Authorization
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AuthOptions _authOptions;
         private readonly IMailService _mailService;
 
-        public LoginController(
+        public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<AuthOptions> authOptions,
@@ -40,7 +36,7 @@ namespace Api.Controllers.Authorization
 
         [HttpPost]
         [Route("SignIn")]
-        public async Task<IActionResult> Login([FromForm] LoginRequest request)
+        public async Task<IActionResult> SignIn([FromForm] LoginRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.UserNameOrEmail) ??
                await _userManager.FindByNameAsync(request.UserNameOrEmail);
@@ -62,28 +58,50 @@ namespace Api.Controllers.Authorization
                     new Claim(ClaimTypes.NameIdentifier, user.Id)
                 });
 
-            var token = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
+            var accessToken = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
             var refreshToken = GetJwt(refreshTokenClaims, _authOptions.GetRefreshTokenExpirationTimeSpan());
 
-            return Ok(new { UserId = user.Id, user.Email, token, refreshToken });
+            return Ok(new { accessToken, refreshToken });
         }
 
-        private string GetJwt(ClaimsIdentity claimsIdentity, TimeSpan expirence)
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(string requestToken)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_authOptions.Key);
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = claimsIdentity,
-                Expires = DateTime.Now.Add(expirence),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+            // Read and validate the token without signature validation
+            JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(requestToken);
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            // Extract the required claims
+            string nameid = jwtToken.Claims.First(c => c.Type == "nameid").Value;
+            string expirenceJwt = jwtToken.Claims.First(c => c.Type == "exp").Value;
+            var expirationDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirenceJwt)).DateTime;
+            // Use the extracted values as needed
 
-            return tokenString;
+            var user = await _userManager.FindByIdAsync(nameid);
+
+            if (user == null)
+                return BadRequest("User not found, Invalid Token");
+
+            if (DateTime.Now > expirationDateTime)
+                return Unauthorized("Token expired");
+
+            var tokenClaims = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Email, user.Email)
+                });
+
+            var refreshTokenClaims = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)
+                });
+
+            var accessToken = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
+            var refreshToken = GetJwt(refreshTokenClaims, _authOptions.GetRefreshTokenExpirationTimeSpan());
+
+            return Ok(new { accessToken, refreshToken });
         }
 
         [HttpPost]
@@ -134,6 +152,24 @@ namespace Api.Controllers.Authorization
             {
                 return BadRequest(result.Errors);
             }
+        }
+
+        private string GetJwt(ClaimsIdentity claimsIdentity, TimeSpan expirence)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_authOptions.Key);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claimsIdentity,
+                Expires = DateTime.Now.Add(expirence),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
     }
 }

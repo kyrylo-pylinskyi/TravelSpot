@@ -9,10 +9,10 @@ namespace Api.Controllers.Authorization
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GoogleAuthorizationController : ControllerBase
+    public class GoogleAuthController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public GoogleAuthorizationController(AppDbContext context)
+        public GoogleAuthController(AppDbContext context)
         {
             _context = context;
         }
