@@ -1,19 +1,14 @@
 ﻿using Api.Data;
-using Api.Models.Entities;
 using Api.Models.Entities.Identity;
 using Api.Services.Security;
 using Api.Services.Smtp;
 using Api.Services.TokenProviders;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using System.Configuration;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 //Initialize builder
 var builder = WebApplication.CreateBuilder(args);

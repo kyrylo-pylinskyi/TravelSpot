@@ -1,5 +1,6 @@
 ﻿using Api.Models.DTO.Request.Authorization.Login;
 using Api.Models.DTO.Request.Authorization.ResetPassword;
+using Api.Models.Entities.Application;
 using Api.Models.Entities.Identity;
 using Api.Services.Security;
 using Api.Services.Smtp;
@@ -50,23 +51,39 @@ namespace Api.Controllers.Authorization
                 return Unauthorized();
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_authOptions.Key);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
+            var tokenClaims = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Email, user.Email)
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                });
+
+            var refreshTokenClaims = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id)
+                });
+
+            var token = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
+            var refreshToken = GetJwt(refreshTokenClaims, _authOptions.GetRefreshTokenExpirationTimeSpan());
+
+            return Ok(new { UserId = user.Id, user.Email, token, refreshToken });
+        }
+
+        private string GetJwt(ClaimsIdentity claimsIdentity, TimeSpan expirence)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_authOptions.Key);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claimsIdentity,
+                Expires = DateTime.Now.Add(expirence),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { UserId = user.Id, user.Email, Token = tokenString });
+            return tokenString;
         }
 
         [HttpPost]
@@ -100,7 +117,7 @@ namespace Api.Controllers.Authorization
 
             var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
             {
                 var message = new MailRequest
                 {
