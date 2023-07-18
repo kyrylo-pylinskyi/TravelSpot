@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Configuration;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 //Initialize builder
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Web application provider and configuration
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
+
 
 //Web application db connection string
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -62,7 +64,6 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
-    //options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
@@ -84,16 +85,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.AddCors(options =>
 {
-    var client = configuration.GetValue<string>("Client");
-    var osm = configuration.GetValue<string>("OpenStreetMap");
-    var postman = configuration.GetValue<string>("Postman");
-
-    options.AddPolicy("OpenStreetMap", builder =>
-    {
-        builder.WithOrigins(osm)
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
+    var client = configuration.GetValue<string>("TravelSpotApp");
 
     options.AddPolicy("TravelSpotApp", builder =>
     {
@@ -115,31 +107,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // указывает, будет ли валидироваться издатель при валидации токена
             ValidateIssuer = true,
-            // строка, представляющая издателя
             ValidIssuer = authOptions.Issuer,
-            // будет ли валидироваться потребитель токена
             ValidateAudience = true,
-            // установка потребителя токена
             ValidAudience = authOptions.Audience,
-            // будет ли валидироваться время существования
             ValidateLifetime = true,
-            // установка ключа безопасности
             IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
-            // валидация ключа безопасности
             ValidateIssuerSigningKey = true,
         };
     })
     .AddGoogle(options =>
     {
-        options.ClientId = "756512269430-nsemobm9quvtn8tgu07qh6roh2kleqdq.apps.googleusercontent.com";
-        options.ClientSecret = "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";
+        IConfigurationSection googleAuthNSection =
+        configuration.GetSection("Authentication:Google");
+        options.ClientId = googleAuthNSection["ClientId"];
+        options.ClientSecret = googleAuthNSection["ClientSecret"];
     });
 
 var app = builder.Build();
-
-app.UseHttpLogging();
 
 
 // Configure the HTTP request pipeline.
@@ -153,7 +138,6 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseCors("OpenStreetMap");
 app.UseCors("TravelSpotApp");
 
 app.UseAuthentication();

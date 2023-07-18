@@ -1,15 +1,9 @@
-﻿using Api.Data;
-using Api.Models.DTO.Request;
-using Api.Models.DTO.Request.Authorization.Registration;
-using Api.Models.Entities.Application;
-using Api.Services.Security;
+﻿using Api.Models.DTO.Request.Authorization.Registration;
+using Api.Models.Entities.Identity;
 using Api.Services.Smtp;
 using Api.Services.Smtp.Request;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Api.Controllers.Authorization
 {
@@ -17,94 +11,101 @@ namespace Api.Controllers.Authorization
     [Route("api/[controller]")]
     public class RegistrationController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMailService _mailService;
-        public RegistrationController(AppDbContext context, IMailService mailService)
+        public RegistrationController(UserManager<ApplicationUser> userManager, IMailService mailService)
         {
-            _context = context;
+            _userManager = userManager;
             _mailService = mailService;
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("SignUp")]
         public async Task<IActionResult> Register([FromForm] RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
-                return BadRequest("This email address is used by another user");
 
-            string validationCode = Credentials.CreateVerificationCode();
-            var user = new User()
+            var user = new ApplicationUser { UserName = request.Name, Email = request.Email};
+            var result = await _userManager.CreateAsync(user, request.Password);
+
+            if (result.Succeeded)
             {
-                Name = request.Name,
-                Email = request.Email,
-                PasswordHash = Credentials.CreateHash(request.Password, out byte[] passwordSalt),
-                PasswordSalt = passwordSalt,
-                Role = UserRoles.Client,
-                VerificationTokenHash = Credentials.CreateHash(validationCode, out byte[] verificationSalt),
-                VerificationTokenSalt = verificationSalt,
-                IsActive = false,
-                IsEmailVerified = false,
-            };
+                // Generate an email verification token
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                // Build the verification URL
+                var callbackUrl = Url.Action("ConfirmEmail", "Registration", new { userId = user.Id, token }, Request.Scheme);
 
-            await _context.AddAsync(user);
-            await _context.SaveChangesAsync();
+                var message = new MailRequest
+                {
+                    ToEmail = user.Email,
+                    Subject = "Confirm your email",
+                    Body = $"Please confirm your account by clicking this <a href='{callbackUrl}'>link</a>"
+                };
 
-            var mailRequest = new VerificationRequest()
+                await _mailService.SendEmailAsync(message);
+
+                return Ok(new {msg = "OK", user.Id, token, callbackUrl } );
+            }
+            else
             {
-                ToEmail = user.Email,
-                UserName = user.Name,
-                Code = validationCode
-            };
-
-            await _mailService.SendVerificationEmailAsync(mailRequest);
-
-            return Ok($"We sent email with verification code to {user.Email}");
+                return BadRequest(result.Errors);
+            }
         }
 
-        [HttpPut]
-        [Route("resend-code")]
-        public async Task<IActionResult> ResendVerificationCode([FromForm] RegisterRequest request)
+        [HttpGet]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (!Credentials.VerifyHash(request.Password, user.PasswordHash, user.PasswordSalt))
-                BadRequest("Bad credentials");
-
-            string validationCode = Credentials.CreateVerificationCode();
-            user.VerificationTokenHash = Credentials.CreateHash(validationCode, out byte[] verificationSalt);
-            user.VerificationTokenSalt = verificationSalt;
-            await _context.SaveChangesAsync();
-
-            var mailRequest = new VerificationRequest()
+            if (userId == null || token == null)
             {
-                ToEmail = user.Email,
-                UserName = user.Name,
-                Code = validationCode
-            };
+                return BadRequest("User Id and token can not be null");
+            }
 
-            await _mailService.SendVerificationEmailAsync(mailRequest);
-
-            return Ok($"We sent email with verification code to {user.Email}");
-        }
-
-        [HttpPut]
-        [Route("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromForm] ConfirmEmailRequest request)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
+            {
                 return BadRequest("User not found");
+            }
 
-            if (!Credentials.VerifyHash(request.Code, user.VerificationTokenHash, user.VerificationTokenSalt))
-                return BadRequest("Invalid code");
-
-            user.VerificationTokenHash = null;
-            user.VerificationTokenSalt = null;
-            user.IsEmailVerified = true;
-            user.IsActive = true;
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Email address verified");
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return Ok(new { msg = "OK", user.Id, user.Email });
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
+
+        [HttpPut]
+        [Route("ResendConfirmation")]
+        public async Task<IActionResult> ResendConfirmation([FromForm] string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return BadRequest("Email already confirmed");
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "Registration", new { userId = user.Id, token }, Request.Scheme);
+
+            var message = new MailRequest
+            {
+                ToEmail = user.Email,
+                Subject = "Confirm your email",
+                Body = $"Please confirm your account by clicking this <a href='{callbackUrl}'>link</a>."
+            };
+
+            await _mailService.SendEmailAsync(message);
+
+            return Ok(new { msg = "OK", user.Id, token, callbackUrl });
+        }
+
     }
 }
