@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 import FormData from 'form-data';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';

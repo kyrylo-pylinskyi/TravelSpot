@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Easing } from "react-native";
+import { Easing, Image } from "react-native";
 import TextTicker from "react-native-text-ticker";
 
 import { greetingList } from "../../utils/greetingList";
+import icon from '../../assets/icon.png';
 
 import StyledBtn from "../elements/Buttons/CustomButton";
 import { StyledTitle, StyledTitleItalic } from "../elements/typography";
@@ -16,6 +17,10 @@ const Greeting = ({setCurrentPage}) => {
 
     return(
         <>
+            <Image
+                source={icon}
+                style={{width: 200, height: 200}}
+            />
             <TextTicker
                 style={{paddingBottom: 0}}
                 scrollSpeed={16}
@@ -23,7 +28,7 @@ const Greeting = ({setCurrentPage}) => {
                 repeatSpacer={10}
                 easing={Easing.linear}
             >
-                <StyledTitle>
+                <StyledTitle style={{fontSize: 30}}>
                     {greetingText}
                 </StyledTitle>
             </TextTicker>
@@ -34,7 +39,7 @@ const Greeting = ({setCurrentPage}) => {
                 repeatSpacer={10}
                 easing={Easing.linear}
             >
-                <StyledTitleItalic>
+                <StyledTitleItalic style={{fontSize: 30}}>
                     {greetingText}
                 </StyledTitleItalic>
 
@@ -46,7 +51,7 @@ const Greeting = ({setCurrentPage}) => {
                 repeatSpacer={10}
                 easing={Easing.linear}
             >
-                <StyledTitle>
+                <StyledTitle style={{fontSize: 30}}>
                     {greetingText}
                 </StyledTitle>
             </TextTicker>

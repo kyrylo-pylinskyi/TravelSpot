@@ -7,6 +7,7 @@ import {
   Urbanist_500Medium, 
   Urbanist_600SemiBold, 
   Urbanist_700Bold, 
+  Urbanist_500Medium_Italic,
   Urbanist_600SemiBold_Italic,
   Urbanist_700Bold_Italic
 } from '@expo-google-fonts/urbanist'
@@ -20,6 +21,7 @@ export default function App() {
     Urbanist_500Medium,
     Urbanist_600SemiBold,
     Urbanist_700Bold,
+    Urbanist_500Medium_Italic,
     Urbanist_600SemiBold_Italic,
     Urbanist_700Bold_Italic
   });

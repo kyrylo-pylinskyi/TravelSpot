@@ -7,7 +7,7 @@ export const StyledTitle = styled.Text`
     max-width: 330px;
     width: 100%;
     margin-bottom: 10px;
-    font-size: 30px;
+    font-size: 48px;
     color: #1E232C;
     font-family: 'Urbanist_600SemiBold';
 `
@@ -16,7 +16,7 @@ export const StyledTitleItalic = styled.Text`
     max-width: 330px;
     width: 100%;
     margin-bottom: 10px;
-    font-size: 30px;
+    font-size: 48px;
     color: #1E232C;
     font-family: 'Urbanist_600SemiBold_Italic';
 `
@@ -29,4 +29,13 @@ export const StyledText = styled.Text`
     color: #8391A1;
     font-weight: 500;
     font-family: 'Urbanist_500Medium';
+`
+export const StyledTextItalic = styled.Text`
+    max-width: 330px;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #8391A1;
+    font-weight: 500;
+    font-family: 'Urbanist_500Medium_Italic';
 `
