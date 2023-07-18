@@ -1,15 +1,10 @@
 import { StyledInput } from "../elements/inputs";
 import { StyledTitle,StyledText } from "../elements/typography";
 import StyledBtn from "../elements/Buttons/CustomButton";
-import StyledTopBar from "../elements/Topbar/Topbar";
 
 const PasswordRecovery = ({setAuthAction}) => {
     return(
         <>
-            <StyledTopBar 
-                backBtn 
-                backAction={() => setAuthAction('login')}
-            />
             <StyledTitle>
                 Forgot password?
             </StyledTitle>

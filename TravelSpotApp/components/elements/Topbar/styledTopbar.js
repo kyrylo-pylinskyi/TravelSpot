@@ -9,7 +9,6 @@ export const StyledTopbar = styled.View`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    position: absolute;
     top: 0;
     z-index: 1000;
 `

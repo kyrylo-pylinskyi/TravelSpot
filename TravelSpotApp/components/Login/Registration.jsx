@@ -9,7 +9,6 @@ import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
 import { StyledTitle } from '../elements/typography';
 import { StyledInput } from '../elements/inputs';
-import StyledTopBar from "../elements/Topbar/Topbar";
 
 const Registration = ({setAuthAction, setCurrentPage}) => {
     const [authData, setAuthData] = useState({username: '', email: '', psswd: '', confirmPsswd: ''}) 
@@ -46,10 +45,6 @@ const Registration = ({setAuthAction, setCurrentPage}) => {
 
     return(
         <>
-            <StyledTopBar 
-                backBtn 
-                backAction={() => setCurrentPage('greeting')}
-            />
             <StyledTitle
                 p='60px 0 0 0'
             >

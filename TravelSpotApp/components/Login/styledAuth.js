@@ -8,7 +8,7 @@ export const StyledAuthPageWrapper = styled.View`
     margin: 0 auto;
     display: flex;
     background: #ffffff;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative;
 `;

@@ -5,7 +5,6 @@ import FormData from 'form-data';
 
 import { devProxy, axiosConfig } from '../../utils/axiosConfig';
 
-import StyledTopBar from '../elements/Topbar/Topbar';
 import StyledBtn from '../elements/Buttons/CustomButton';
 import StyledSeparator from '../elements/Separator/Separator';
 import { StyledTitle } from '../elements/typography';
@@ -44,10 +43,6 @@ const Login = ({setAuthAction, setCurrentPage}) => {
 
     return(
         <>
-            <StyledTopBar 
-                backBtn 
-                backAction={() => setCurrentPage('greeting')}
-            />
             <StyledTitle>
                 Login
             </StyledTitle>
