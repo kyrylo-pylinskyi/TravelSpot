@@ -33,8 +33,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\DTO\Request\Authorization\ResetPassword\" />
-  </ItemGroup>
-
 </Project>

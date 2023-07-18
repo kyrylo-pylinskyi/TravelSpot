@@ -28,7 +28,7 @@ builder.Services.AddControllers();
 var mailSettings = builder.Configuration.GetSection("MailSettings");
 
 // Add the configuration for MailSettings
-builder.Services.Configure<MailSettings>(mailSettings);
+builder.Services.Configure<MailOptions>(mailSettings);
 
 builder.Services.AddTransient<IMailService, MailService>();
 
@@ -66,16 +66,16 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.SignIn.RequireConfirmedEmail = true;
-    options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+    options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
 });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+    options.Tokens.EmailConfirmationTokenProvider = "EmailConfirmation";
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders()
-.AddTokenProvider<EmailConfirmationTokenProvider<ApplicationUser>>("emailconfirmation");
+.AddTokenProvider<EmailConfirmationTokenProvider<ApplicationUser>>("EmailConfirmation");
 
 
 builder.Services.AddCors(options =>
