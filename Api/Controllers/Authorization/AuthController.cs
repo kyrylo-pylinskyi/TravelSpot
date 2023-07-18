@@ -73,18 +73,17 @@ namespace Api.Controllers.Authorization
             // Read and validate the token without signature validation
             JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(requestToken);
 
-            // Extract the required claims
+            // Extract the required values from jwt
             string nameid = jwtToken.Claims.First(c => c.Type == "nameid").Value;
-            string expirenceJwt = jwtToken.Claims.First(c => c.Type == "exp").Value;
-            var expirationDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirenceJwt)).DateTime;
-            // Use the extracted values as needed
+            string exp = jwtToken.Claims.First(c => c.Type == "exp").Value;
+            var expirationDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(exp)).DateTime;
 
             var user = await _userManager.FindByIdAsync(nameid);
 
             if (user == null)
                 return BadRequest("User not found, Invalid Token");
 
-            if (DateTime.Now > expirationDateTime)
+            if (DateTime.UtcNow > expirationDateTime)
                 return Unauthorized("Token expired");
 
             var tokenClaims = new ClaimsIdentity(new[]
@@ -162,7 +161,7 @@ namespace Api.Controllers.Authorization
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
-                Expires = DateTime.Now.Add(expirence),
+                Expires = DateTime.UtcNow.Add(expirence),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
