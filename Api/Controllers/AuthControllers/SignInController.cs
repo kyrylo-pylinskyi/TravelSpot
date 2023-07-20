@@ -20,13 +20,13 @@ namespace Api.Controllers.AuthControllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly AuthOptions _authOptions;
+        private readonly JwtAuthOptions _authOptions;
         private readonly IMailService _mailService;
 
         public SignInController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IOptions<AuthOptions> authOptions,
+            IOptions<JwtAuthOptions> authOptions,
             IMailService mailService)
         {
             _userManager = userManager;
@@ -160,6 +160,8 @@ namespace Api.Controllers.AuthControllers
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Audience = _authOptions.Audience,
+                Issuer = _authOptions.Issuer,
                 Subject = claimsIdentity,
                 Expires = DateTime.UtcNow.Add(expirence),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

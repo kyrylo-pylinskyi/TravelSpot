@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Api.Services.Security
 {
-    public class AuthOptions
+    public class JwtAuthOptions
     {
         public string Issuer { get; set; }
         public string Audience { get; set; }
