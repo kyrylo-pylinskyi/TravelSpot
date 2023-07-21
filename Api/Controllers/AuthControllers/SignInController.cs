@@ -81,26 +81,12 @@ namespace Api.Controllers.AuthControllers
             var user = await _userManager.FindByIdAsync(nameid);
 
             if (user == null)
-                return BadRequest(new AuthResponse { Message = "InvalidToken", UserEmail = "" });
+                return BadRequest(new AuthResponse { Message = "InvalidToken" });
 
             if (DateTime.UtcNow > expirationDateTime)
                 return Unauthorized(new AuthResponse { Message = "InvalidToken", UserEmail = user.Email });
 
-            var tokenClaims = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Email, user.Email)
-                });
-
-            var refreshTokenClaims = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id)
-                });
-
-            var accessToken = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
-            var refreshToken = GetJwt(refreshTokenClaims, _authOptions.GetRefreshTokenExpirationTimeSpan());
-
-            return Ok(new SignInResponse{ AccessToken = accessToken, RefreshToken = refreshToken });
+            return Ok(JwtService.GetUserAuthTokens(_authOptions, user));
         }
 
         [HttpPost]
