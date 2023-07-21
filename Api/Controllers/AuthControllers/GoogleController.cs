@@ -22,11 +22,11 @@ namespace Api.Controllers.AuthControllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JwtAuthOptions _authOptions;
 
-        public GoogleController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, JwtAuthOptions authOptions)
+        public GoogleController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<JwtAuthOptions> authOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _authOptions = authOptions;
+            _authOptions = authOptions.Value;
         }
 
         [AllowAnonymous]

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Net.Http;
 
-namespace Api.Services
+namespace Api.Services.Helpers
 {
     public static class GeoLocationService
     {

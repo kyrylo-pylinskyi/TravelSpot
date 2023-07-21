@@ -1,7 +1,7 @@
 ﻿using Api.Data;
 using Api.Models.DTO.Request.Spot;
 using Api.Models.Entities.Application;
-using Api.Services;
+using Api.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.SpotControllers

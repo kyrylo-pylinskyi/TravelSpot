@@ -1,5 +1,6 @@
 ﻿using Api.Data;
 using Api.Models.Entities.Identity;
+using Api.Services.Helpers;
 using Api.Services.Security;
 using Api.Services.Smtp;
 using Api.Services.TokenProviders;
@@ -64,6 +65,10 @@ namespace Api
             var mailSettings = Configuration.GetSection("MailSettings");
             services.Configure<MailOptions>(mailSettings);
             services.AddTransient<IMailService, MailService>();
+
+            // User Service
+            //services.AddHttpContextAccessor();
+            //services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IUserTwoFactorTokenProvider<ApplicationUser>, EmailConfirmationTokenProvider<ApplicationUser>>();
 

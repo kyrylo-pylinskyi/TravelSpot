@@ -41,27 +41,12 @@ namespace Api.Controllers.AuthControllers
             var user = await _userManager.FindByEmailAsync(request.UserNameOrEmail) ??
                await _userManager.FindByNameAsync(request.UserNameOrEmail);
 
-
             if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 return Unauthorized();
             }
 
-            var tokenClaims = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Email, user.Email)
-                });
-
-            var refreshTokenClaims = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id)
-                });
-
-            var accessToken = GetJwt(tokenClaims, _authOptions.GetAccessTokenExpirationTimeSpan());
-            var refreshToken = GetJwt(refreshTokenClaims, _authOptions.GetRefreshTokenExpirationTimeSpan());
-
-            return Ok(new SignInResponse { AccessToken = accessToken, RefreshToken = refreshToken });
+            return Ok(JwtService.GetUserAuthTokens(_authOptions, user));
         }
 
         [HttpPost]
