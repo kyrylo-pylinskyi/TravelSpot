@@ -1,5 +1,4 @@
-﻿using Api.Models.Entities.Application;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Api.Models.Entities.Identity
 {

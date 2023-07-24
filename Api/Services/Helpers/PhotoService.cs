@@ -1,10 +1,8 @@
-﻿using Azure.Core;
-
-namespace Api.Services.Helpers
+﻿namespace Api.Services.Helpers
 {
     public static class PhotoService
     {
-        public static byte[] FormFileToByteArray(IFormFile formFile)
+        public static byte[] ToByteArray(this IFormFile formFile)
         {
             byte[] fileData = null;
 

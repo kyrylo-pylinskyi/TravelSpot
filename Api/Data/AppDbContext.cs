@@ -13,7 +13,6 @@ namespace Api.Data
             Database.EnsureCreated();
         }
 
-        public DbSet<User> Users => Set<User>();
         public DbSet<UserPhoto> UserPhotos => Set<UserPhoto>();
         public DbSet<Spot> Spots => Set<Spot>();
         public DbSet<SpotAddress> SpotAddresses => Set<SpotAddress>();

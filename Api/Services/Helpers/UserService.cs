@@ -1,22 +1,18 @@
-﻿using System.Security.Claims;
+﻿using Api.Models.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Api.Services.Helpers
 {
-    public class UserService : IUserService
+    public static class UserService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public UserService(IHttpContextAccessor httpContextAccessor)
+        public static string GetEmail(HttpContext context)
         {
-            _httpContextAccessor = httpContextAccessor;
-        }
-        public string GetEmail()
-        {
-            if (_httpContextAccessor.HttpContext is null)
-                return "HTTP Context Accessor is null";
+            var identity = context.User.Identity as ClaimsIdentity;
+            if (identity != null)
+                return identity.FindFirst(ClaimTypes.Email).Value;
 
-            var userContext = _httpContextAccessor.HttpContext.User;
-            return userContext.FindFirstValue(ClaimTypes.Email);
+            return null;
         }
     }
 }

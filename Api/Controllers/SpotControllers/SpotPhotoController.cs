@@ -22,7 +22,7 @@ namespace Api.Controllers.SpotControllers
             var spotPhoto = new SpotPhoto
             {
                 SpotId = request.SpotId,
-                Photo = PhotoService.FormFileToByteArray(request.SpotPhoto)
+                Photo = request.SpotPhoto.ToByteArray()
             };
 
             await _context.SpotPhotos.AddAsync(spotPhoto);
