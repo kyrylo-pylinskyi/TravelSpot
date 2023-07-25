@@ -39,14 +39,8 @@ namespace Api.Controllers.ProfileControllers
             if (user == null)
                 return NotFound(new { msg = "User not found" });
 
-            var photos = _context.UserPhotos.Where(up => up.UserId == user.Id)
-                                 .Select(p => new UserPhotoResponse()
-                                 {
-                                     UserId = p.UserId,
-                                     IsMainPhoto = p.IsMainPhoto,
-                                     LastUpdateTime = p.LastUpdateTime,
-                                     Photo = p.Photo
-                                 });
+            var photos = GetUserPhotos(user.Id);
+
             return Ok(photos);
         }
 
@@ -62,16 +56,9 @@ namespace Api.Controllers.ProfileControllers
             if (user == null)
                 return NotFound(new { msg = "User not found" });
 
-            var userPhotos = _context.UserPhotos.Where(up => up.UserId == user.Id);
-            foreach (var userPhoto in userPhotos)
-            {
-                userPhoto.IsMainPhoto = false;
-            }
-
             var photo = new UserPhoto
             {
                 UserId = user.Id,
-                IsMainPhoto = true,
                 LastUpdateTime = DateTime.Now,
                 Photo = request.Photo.ToByteArray()
             };
@@ -79,16 +66,9 @@ namespace Api.Controllers.ProfileControllers
             await _context.UserPhotos.AddAsync(photo);
             await _context.SaveChangesAsync();
 
-            var photos = _context.UserPhotos.Where(up => up.UserId == user.Id)
-                                 .Select(p => new UserPhotoResponse()
-                                 {
-                                     UserId = p.UserId,
-                                     IsMainPhoto = p.IsMainPhoto,
-                                     LastUpdateTime = p.LastUpdateTime,
-                                     Photo = p.Photo
-                                 });
+            var photos = GetUserPhotos(user.Id);
 
-            return CreatedAtAction(nameof(Get), new { }, new { msg = "OK", photos });
+            return Ok(new { msg = "OK", photos });
         }
 
         [HttpDelete("{id}")]
@@ -109,23 +89,44 @@ namespace Api.Controllers.ProfileControllers
 
             await _context.SaveChangesAsync();
 
-            if (photo.IsMainPhoto == true)
-            {
-                var mainPhoto = await _context.UserPhotos.OrderByDescending(p => p.LastUpdateTime).FirstOrDefaultAsync();
-                mainPhoto.IsMainPhoto = true;
-                await _context.SaveChangesAsync();
-            }
+            var photos = GetUserPhotos(user.Id);
 
-            var photos = _context.UserPhotos.Where(up => up.UserId == user.Id)
+            return Ok(new { msg = "OK", photos });
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> SetAsMain(int id)
+        {
+            string email = UserService.GetEmail(HttpContext);
+            if (string.IsNullOrEmpty(email))
+                return BadRequest(new { msg = "Email is null or not found", email });
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return NotFound(new { msg = "User not found", email });
+
+            var photo = await _context.UserPhotos.FindAsync(id);
+            if (photo == null)
+                return BadRequest(new { msg = "Photo not found", id });
+
+            photo.LastUpdateTime = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            var photos = GetUserPhotos(user.Id);
+
+            return Ok(new { msg = "OK", photos });
+        }
+
+        private List<UserPhotoResponse> GetUserPhotos(string userId) =>
+            _context.UserPhotos.Where(up => up.UserId == userId)
                                  .Select(p => new UserPhotoResponse()
                                  {
                                      UserId = p.UserId,
-                                     IsMainPhoto = p.IsMainPhoto,
                                      LastUpdateTime = p.LastUpdateTime,
                                      Photo = p.Photo
-                                 });
-
-            return CreatedAtAction(nameof(Get), new { }, new { msg = "OK", photos });
-        }
+                                 })
+                                 .OrderByDescending(p => p.LastUpdateTime)
+                                 .ToList();
     }
 }
