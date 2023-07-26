@@ -1,5 +1,5 @@
-﻿using Api.Models.DTO.Request.Auth.SignIn;
-using Api.Models.DTO.Response.Auth;
+﻿using Api.Models.DTO.Requests.AuthRequests.SignIn;
+using Api.Models.DTO.Response.AuthResponse;
 using Api.Models.Entities.Identity;
 using Api.Services.Security;
 using Api.Services.Smtp;

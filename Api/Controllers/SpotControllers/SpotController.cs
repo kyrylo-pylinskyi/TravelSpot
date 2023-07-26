@@ -1,6 +1,6 @@
 ﻿using Api.Data;
-using Api.Models.DTO.Request.Spot;
-using Api.Models.DTO.Response.Spot;
+using Api.Models.DTO.Requests.SpotRequests;
+using Api.Models.DTO.Response.SpotResponse;
 using Api.Models.Entities.Application;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

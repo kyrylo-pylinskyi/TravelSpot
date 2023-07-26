@@ -1,5 +1,5 @@
 ﻿using Api.Data;
-using Api.Models.DTO.Request.Spot;
+using Api.Models.DTO.Requests.SpotRequests;
 using Api.Models.Entities.Application;
 using Microsoft.AspNetCore.Mvc;
 

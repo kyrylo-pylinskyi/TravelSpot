@@ -1,6 +1,5 @@
-﻿using Api.Models.DTO.Response.Auth;
+﻿using Api.Models.DTO.Response.AuthResponse;
 using Api.Models.Entities.Identity;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
