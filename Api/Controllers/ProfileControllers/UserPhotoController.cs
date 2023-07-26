@@ -24,7 +24,7 @@ namespace Api.Controllers.ProfileControllers
             if (user == null)
                 return BadRequest(new { msg = "User not found" });
 
-            var profilePhotos = GetUserPhotos(user);
+            var profilePhotos = await GetUserPhotos(user);
 
             return Ok(profilePhotos);
         }
