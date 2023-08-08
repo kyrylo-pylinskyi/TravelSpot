@@ -4,10 +4,6 @@ namespace Api.Models.DTO.Response.SpotResponse
 {
     public class SpotAddressResponse
     {
-        public int Id { get; set; }
-        public int SpotId { get; set; }
-        public string? PlaceId { get; set; }
-        public string? OsmId { get; set; }
         public string? Country { get; set; }
         public string? State { get; set; }
         public string? City { get; set; }
@@ -17,10 +13,6 @@ namespace Api.Models.DTO.Response.SpotResponse
 
         public SpotAddressResponse(SpotAddress spotAddress)
         {
-            Id = spotAddress.Id;
-            SpotId = spotAddress.SpotId;
-            PlaceId = spotAddress.PlaceId;
-            OsmId = spotAddress.OsmId;
             Country = spotAddress.Country;
             State = spotAddress.State;
             City = spotAddress.City;

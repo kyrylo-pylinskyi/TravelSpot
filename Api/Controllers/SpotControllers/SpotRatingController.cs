@@ -18,7 +18,7 @@ namespace Api.Controllers.SpotControllers
         [HttpPost]
         public async Task<IActionResult> CreateSpotRating([FromForm] SpotRatingRequest request)
         {
-            var spotRating = new SpotRating
+            var spotRating = new SpotRate
             {
                 SpotId = request.SpotId,
                 Rating = request.Rating,

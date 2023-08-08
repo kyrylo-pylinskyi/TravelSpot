@@ -20,6 +20,17 @@ namespace Api.Data
         public DbSet<SpotPhoto> SpotPhotos => Set<SpotPhoto>();
         public DbSet<SpotTag> SpotTags => Set<SpotTag>();
         public DbSet<Tag> Tags => Set<Tag>();
-        public DbSet<SpotRating> SpotRatings => Set<SpotRating>();
+        public DbSet<SpotRate> SpotRatings => Set<SpotRate>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            // Disable cascade delete
+            modelBuilder.Entity<SpotRate>()
+                .HasOne(sr => sr.Spot)
+                .WithMany(s => s.Rates)
+                .HasForeignKey(sr => sr.SpotId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

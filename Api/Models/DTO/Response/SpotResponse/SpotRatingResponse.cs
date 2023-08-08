@@ -4,18 +4,14 @@ namespace Api.Models.DTO.Response.SpotResponse
 {
     public class SpotRatingResponse
     {
-        public int Id { get; set; }
-        public int SpotId { get; set; }
         public double Rating { get; set; }
 
-        public SpotRatingResponse(SpotRating spotRating)
+        public SpotRatingResponse(SpotRate spotRating)
         {
-            Id = spotRating.Id;
-            SpotId = spotRating.SpotId;
             Rating = (double)spotRating.Rating;
         }
 
-        public static IEnumerable<SpotRatingResponse> CreateResponse(List<SpotRating> spotRatings)
+        public static IEnumerable<SpotRatingResponse> CreateResponse(List<SpotRate> spotRatings)
         {
             foreach (var item in spotRatings)
             {

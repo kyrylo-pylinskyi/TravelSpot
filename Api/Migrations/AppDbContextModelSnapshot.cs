@@ -139,7 +139,7 @@ namespace Api.Migrations
                     b.ToTable("SpotPhotos");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.Application.SpotRating", b =>
+            modelBuilder.Entity("Api.Models.Entities.Application.SpotRate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,9 +153,15 @@ namespace Api.Migrations
                     b.Property<int>("SpotId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SpotId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SpotRatings");
                 });
@@ -475,15 +481,23 @@ namespace Api.Migrations
                     b.Navigation("Spot");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.Application.SpotRating", b =>
+            modelBuilder.Entity("Api.Models.Entities.Application.SpotRate", b =>
                 {
                     b.HasOne("Api.Models.Entities.Application.Spot", "Spot")
-                        .WithMany("Ratings")
+                        .WithMany("Rates")
                         .HasForeignKey("SpotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Spot");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.Application.SpotTag", b =>
@@ -573,7 +587,7 @@ namespace Api.Migrations
 
                     b.Navigation("Photos");
 
-                    b.Navigation("Ratings");
+                    b.Navigation("Rates");
 
                     b.Navigation("Tags");
                 });

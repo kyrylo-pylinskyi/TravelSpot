@@ -4,14 +4,14 @@ using Api.Services.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers.ProfileControllers
+namespace Api.Controllers
 {
-    public class ProfileControllerBase : ControllerBase
+    public class ApplicationControllerBase : ControllerBase
     {
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly AppDbContext _context;
 
-        public ProfileControllerBase(UserManager<ApplicationUser> userManager, AppDbContext context)
+        public ApplicationControllerBase(UserManager<ApplicationUser> userManager, AppDbContext context)
         {
             _userManager = userManager;
             _context = context;

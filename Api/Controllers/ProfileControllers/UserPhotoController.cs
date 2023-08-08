@@ -12,7 +12,7 @@ namespace Api.Controllers.ProfileControllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserPhotoController : ProfileControllerBase
+    public class UserPhotoController : ApplicationControllerBase
     {
         public UserPhotoController(UserManager<ApplicationUser> userManager, AppDbContext context) : base(userManager, context) { }
 

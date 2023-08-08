@@ -2,6 +2,8 @@
 using Api.Models.DTO.Requests.SpotRequests;
 using Api.Models.DTO.Response.SpotResponse;
 using Api.Models.Entities.Application;
+using Api.Models.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,18 +11,20 @@ namespace Api.Controllers.SpotControllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SpotController : ControllerBase
+    public class SpotController : ApplicationControllerBase
     {
-        private readonly AppDbContext _context;
-        public SpotController(AppDbContext context)
+        public SpotController(UserManager<ApplicationUser> userManager, AppDbContext context) : base(userManager, context)
         {
-            _context = context;
         }
-        [HttpPost]
+
+        [HttpPost("Create")]
         public async Task<IActionResult> CreateSpot([FromForm] SpotRequest request)
         {
+            var user = await GetAuthorizedUser();
+
             Spot spot = new Spot
             {
+                AuthorId = user.Id,
                 Name = request.SpotName,
                 Description = request.SpotDescription,
             };
@@ -30,33 +34,55 @@ namespace Api.Controllers.SpotControllers
             return Ok(new { SpotId = spot.Id, SpotName = spot.Name, SpotDescription = spot.Description });
         }
 
+        [HttpDelete("Delete/{spotId}")]
+        public async Task<IActionResult> DeleteSpot(int spotId)
+        {
+            var user = await GetAuthorizedUser();
+
+            var spot = await _context.Spots.FindAsync(spotId);
+
+            if (spot == null)
+                return BadRequest(new { msg = "Spot not found", spotId });
+
+            if (spot.AuthorId != user.Id)
+                return BadRequest(new { msg = "You can not delete this Spot", UserId = user.Id, spot.AuthorId });
+
+            _context.Spots.Remove(spot);
+            await _context.SaveChangesAsync();
+            return Ok(new { msg = "Spot Deleted", SpotId = spot.Id, SpotName = spot.Name, SpotDescription = spot.Description });
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateSpot([FromForm] SpotUpdateRequest request)
+        {
+            var user = await GetAuthorizedUser();
+
+            var spot = await _context.Spots.FindAsync(request.SpotId);
+
+            if (spot == null)
+                return BadRequest(new { msg = "Spot not found", request.SpotId });
+
+            if (spot.AuthorId != user.Id)
+                return BadRequest(new { msg = "You can not edit this Spot", UserId = user.Id, spot.AuthorId });
+
+            spot.Name = request.SpotName;
+            spot.Description = request.SpotDescription;
+            await _context.SaveChangesAsync();
+            return Ok(new { msg = "Spot Updated", SpotId = spot.Id, SpotName = spot.Name, SpotDescription = spot.Description });
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetSpots()
         {
             var spots = await _context.Spots
+                                .Include(s => s.Author)
+                                
                                 .Include(s => s.Addresses)
                                 .Include(s => s.Photos)
-                                .Include(s => s.Ratings)
+                                .Include(s => s.Rates)
                                 .Include(s => s.Tags)
                                 .ThenInclude(t => t.Tag)
-                                .Join(_context.SpotCategories,
-                                        s => s.Id, sc => sc.SpotId,
-                                        (s, sc) => new
-                                        {
-                                            Spot = s,
-                                            Category = sc
-                                        })
-                                .Select(s => new SpotResponse
-                                {
-                                    Id = s.Spot.Id,
-                                    Name = s.Spot.Name,
-                                    Description = s.Spot.Description,
-                                    Tags = SpotTagResponse.CreateResponse(s.Spot.Tags).ToList(),
-                                    Category = SpotCategoryResponse.CreateResponse(s.Category),
-                                    Addresses = SpotAddressResponse.CreateResponse(s.Spot.Addresses).ToList(),
-                                    Ratings = SpotRatingResponse.CreateResponse(s.Spot.Ratings).ToList(),
-                                    Photos = SpotPhotoResponse.CreateResponse(s.Spot.Photos).ToList(),
-                                }).ToListAsync();
+                                .ToListAsync();
             return Ok(spots);
         }
     }
