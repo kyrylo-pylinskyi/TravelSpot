@@ -10,11 +10,11 @@ namespace Api.Models.Entities.Application
         [ForeignKey(nameof(AuthorId))]
         public ApplicationUser Author { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public SpotCategory? Category { get; }
-        public List<SpotRate>? Rates { get; }
-        public List<SpotTag>? Tags { get; }
-        public List<SpotPhoto>? Photos { get; }
-        public List<SpotAddress>? Addresses { get; }
+        public string? Description { get; set; }
+        public SpotCategory? Category { get; set; }
+        public List<SpotRate>? Rates { get; set; }
+        public List<SpotTag>? Tags { get; set; }
+        public List<SpotPhoto>? Photos { get; set; }
+        public List<SpotAddress>? Addresses { get; set; }
     }
 }

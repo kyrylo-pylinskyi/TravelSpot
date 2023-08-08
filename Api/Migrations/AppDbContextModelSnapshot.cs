@@ -35,7 +35,6 @@ namespace Api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -63,14 +62,14 @@ namespace Api.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
-
-                    b.Property<string>("OsmId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PlaceId")
                         .HasColumnType("nvarchar(max)");
@@ -100,7 +99,6 @@ namespace Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -147,21 +145,21 @@ namespace Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Rating")
+                    b.Property<int>("Rate")
                         .HasColumnType("int");
+
+                    b.Property<string>("RaterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("SpotId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SpotId");
+                    b.HasIndex("RaterId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SpotId");
 
                     b.ToTable("SpotRatings");
                 });
@@ -198,7 +196,6 @@ namespace Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -439,13 +436,13 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Entities.Application.Spot", b =>
                 {
-                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "User")
+                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "Author")
                         .WithMany("Spots")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.Application.SpotAddress", b =>
@@ -483,21 +480,21 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Entities.Application.SpotRate", b =>
                 {
+                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "Rater")
+                        .WithMany()
+                        .HasForeignKey("RaterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Api.Models.Entities.Application.Spot", "Spot")
                         .WithMany("Rates")
                         .HasForeignKey("SpotId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Rater");
 
                     b.Navigation("Spot");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.Application.SpotTag", b =>

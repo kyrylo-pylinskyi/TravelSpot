@@ -23,7 +23,7 @@ namespace Api.Controllers.SpotControllers
             var spotAddress = new SpotAddress
             {
                 PlaceId = address["PlaceId"],
-                OsmId = address["OsmId"],
+                ExternalId = address["OsmId"],
                 Country = address["Country"],
                 State = address["State"],
                 City = address["City"],

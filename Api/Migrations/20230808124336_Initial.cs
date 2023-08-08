@@ -58,7 +58,7 @@ namespace Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,7 +179,7 @@ namespace Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,7 +220,7 @@ namespace Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PlaceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OsmId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -247,7 +247,7 @@ namespace Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SpotId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -287,16 +287,16 @@ namespace Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Rate = table.Column<int>(type: "int", nullable: false),
                     SpotId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    RaterId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SpotRatings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SpotRatings_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_SpotRatings_AspNetUsers_RaterId",
+                        column: x => x.RaterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -389,14 +389,14 @@ namespace Api.Migrations
                 column: "SpotId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SpotRatings_RaterId",
+                table: "SpotRatings",
+                column: "RaterId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SpotRatings_SpotId",
                 table: "SpotRatings",
                 column: "SpotId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SpotRatings_UserId",
-                table: "SpotRatings",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Spots_AuthorId",

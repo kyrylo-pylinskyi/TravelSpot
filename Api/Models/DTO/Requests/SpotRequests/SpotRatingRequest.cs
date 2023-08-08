@@ -4,7 +4,7 @@ namespace Api.Models.DTO.Requests.SpotRequests
 {
     public class SpotRatingRequest
     {
-        public Rating Rating { get; set; }
+        public Rate Rating { get; set; }
         public int SpotId { get; set; }
     }
 }

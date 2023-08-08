@@ -21,7 +21,7 @@ namespace Api.Controllers.SpotControllers
             var spotRating = new SpotRate
             {
                 SpotId = request.SpotId,
-                Rating = request.Rating,
+                Rate = request.Rating,
             };
 
             await _context.SpotRatings.AddAsync(spotRating);

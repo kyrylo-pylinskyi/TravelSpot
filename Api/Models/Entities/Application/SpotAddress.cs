@@ -8,7 +8,7 @@ namespace Api.Models.Entities.Application
     {
         public int Id { get; set; }
         public string? PlaceId { get; set; }
-        public string? OsmId { get; set; }
+        public string? ExternalId { get; set; }
         public string? Country { get; set; }
         public string? State { get; set; }
         public string? City { get; set; }

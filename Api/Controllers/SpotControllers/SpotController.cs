@@ -71,19 +71,22 @@ namespace Api.Controllers.SpotControllers
             return Ok(new { msg = "Spot Updated", SpotId = spot.Id, SpotName = spot.Name, SpotDescription = spot.Description });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSpots()
+        [HttpGet("Feed")]
+        public async Task<IActionResult> Feed()
         {
-            var spots = await _context.Spots
-                                .Include(s => s.Author)
-                                
-                                .Include(s => s.Addresses)
-                                .Include(s => s.Photos)
-                                .Include(s => s.Rates)
-                                .Include(s => s.Tags)
-                                .ThenInclude(t => t.Tag)
-                                .ToListAsync();
-            return Ok(spots);
+            var spots = await GetSpots();
+
+            return Ok(SpotResponse.CreateResponse(spots));
         }
+
+        private async Task<List<Spot>> GetSpots() =>
+            await _context.Spots
+                .Include(s => s.Author).ThenInclude(a => a.Photos)
+                .Include(s => s.Rates).ThenInclude(r => r.Rater).ThenInclude(r => r.Photos)
+                .Include(s => s.Category)
+                .Include(s => s.Addresses)
+                .Include(s => s.Tags)
+                .Include(s => s.Photos)
+                .ToListAsync();
     }
 }

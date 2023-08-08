@@ -6,7 +6,7 @@ namespace Api.Models.Entities.Application
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int SpotId { get; set; }
 
         [ForeignKey(nameof(SpotId))]
