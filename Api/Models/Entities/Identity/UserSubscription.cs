@@ -12,6 +12,5 @@ namespace Api.Models.Entities.Identity
         public ApplicationUser Subscriber { get; set; }
         [ForeignKey(nameof(TargetUserId))]
         public ApplicationUser TargetUser { get; set; }
-        
     }
 }

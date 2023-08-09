@@ -5,7 +5,7 @@ namespace Api.Models.DTO.Response.SpotResponse
     public class SpotPhotoResponse
     {
         public int Id { get; set; }
-        public byte[] Photo { get; set; }
+        public string Photo { get; set; }
 
         public SpotPhotoResponse(SpotPhoto spotPhoto)
         {
