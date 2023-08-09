@@ -214,6 +214,32 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubscriberId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TargetUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_AspNetUsers_SubscriberId",
+                        column: x => x.SubscriberId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_AspNetUsers_TargetUserId",
+                        column: x => x.TargetUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpotAddresses",
                 columns: table => new
                 {
@@ -381,7 +407,8 @@ namespace Api.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SpotCategories_SpotId",
                 table: "SpotCategories",
-                column: "SpotId");
+                column: "SpotId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpotPhotos_SpotId",
@@ -417,6 +444,16 @@ namespace Api.Migrations
                 name: "IX_UserPhotos_UserId",
                 table: "UserPhotos",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_SubscriberId",
+                table: "UserSubscriptions",
+                column: "SubscriberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_TargetUserId",
+                table: "UserSubscriptions",
+                column: "TargetUserId");
         }
 
         /// <inheritdoc />
@@ -454,6 +491,9 @@ namespace Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserPhotos");
+
+            migrationBuilder.DropTable(
+                name: "UserSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

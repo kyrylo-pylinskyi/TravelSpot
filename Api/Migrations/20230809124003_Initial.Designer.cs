@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230808124336_Initial")]
+    [Migration("20230809124003_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -113,7 +113,8 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SpotId");
+                    b.HasIndex("SpotId")
+                        .IsUnique();
 
                     b.ToTable("SpotCategories");
                 });
@@ -304,6 +305,31 @@ namespace Api.Migrations
                     b.ToTable("UserPhotos");
                 });
 
+            modelBuilder.Entity("Api.Models.Entities.Identity.UserSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("SubscriberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TargetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscriberId");
+
+                    b.HasIndex("TargetUserId");
+
+                    b.ToTable("UserSubscriptions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -462,8 +488,8 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.Entities.Application.SpotCategory", b =>
                 {
                     b.HasOne("Api.Models.Entities.Application.Spot", "Spot")
-                        .WithMany()
-                        .HasForeignKey("SpotId")
+                        .WithOne("Category")
+                        .HasForeignKey("Api.Models.Entities.Application.SpotCategory", "SpotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -530,6 +556,25 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Api.Models.Entities.Identity.UserSubscription", b =>
+                {
+                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "Subscriber")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("SubscriberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Api.Models.Entities.Identity.ApplicationUser", "TargetUser")
+                        .WithMany()
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Subscriber");
+
+                    b.Navigation("TargetUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -585,6 +630,8 @@ namespace Api.Migrations
                 {
                     b.Navigation("Addresses");
 
+                    b.Navigation("Category");
+
                     b.Navigation("Photos");
 
                     b.Navigation("Rates");
@@ -597,6 +644,8 @@ namespace Api.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("Spots");
+
+                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }

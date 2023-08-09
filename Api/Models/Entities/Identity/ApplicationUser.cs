@@ -8,5 +8,6 @@ namespace Api.Models.Entities.Identity
         public string? Bio { get; set; }
         public List<UserPhoto>? Photos { get; set; }
         public List<Spot>? Spots { get; set; }
+        public List<UserSubscription> Subscriptions { get; set; }
     }
 }
