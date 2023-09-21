@@ -10,7 +10,7 @@ namespace Api.Services.Helpers
         {
             var identity = context.User.Identity as ClaimsIdentity;
             if (identity != null)
-                return identity.FindFirst(ClaimTypes.Email).Value;
+                return identity.FindFirst(ClaimTypes.Email)?.Value;
 
             return null;
         }

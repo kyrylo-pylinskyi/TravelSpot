@@ -22,6 +22,9 @@ namespace Api.Controllers.SpotControllers
         {
             var user = await GetAuthorizedUser();
 
+            if(user == null)
+                return Unauthorized(new { msg = "Unautorized" });
+
             Spot spot = new Spot
             {
                 AuthorId = user.Id,
@@ -38,6 +41,9 @@ namespace Api.Controllers.SpotControllers
         public async Task<IActionResult> DeleteSpot(int spotId)
         {
             var user = await GetAuthorizedUser();
+
+            if (user == null)
+                return Unauthorized(new { msg = "Unautorized" });
 
             var spot = await _context.Spots.FindAsync(spotId);
 
@@ -56,6 +62,9 @@ namespace Api.Controllers.SpotControllers
         public async Task<IActionResult> UpdateSpot([FromForm] SpotUpdateRequest request)
         {
             var user = await GetAuthorizedUser();
+
+            if (user == null)
+                return Unauthorized(new { msg = "Unautorized" });
 
             var spot = await _context.Spots.FindAsync(request.SpotId);
 

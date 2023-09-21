@@ -28,8 +28,8 @@ namespace Api.Models.DTO.Response.SpotResponse
             AuthorPhoto = spot.Author?.Photos?.OrderByDescending(p => p.LastUpdateTime).FirstOrDefault()?.Photo;
             SpotName = spot.Name;
             SpotDescription = spot.Description;
-            SpotCategoryName = spot.Category.Name;
-            SpotCategoryDescription = spot.Category.Description;
+            SpotCategoryName = spot.Category?.Name;
+            SpotCategoryDescription = spot.Category?.Description;
             SpotAvgRate = SpotRateResponse.CreateResponse(spot.Rates);
             SpotTags = SpotTagResponse.CreateResponse(spot.Tags).ToList();
             SpotAddresses = SpotAddressResponse.CreateResponse(spot.Addresses).ToList();

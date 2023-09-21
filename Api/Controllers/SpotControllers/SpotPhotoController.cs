@@ -7,7 +7,6 @@ using Api.Services.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Entity;
 
 namespace Api.Controllers.SpotControllers
 {
@@ -22,6 +21,15 @@ namespace Api.Controllers.SpotControllers
         [HttpPost("Create")]
         public async Task<IActionResult> CreateSpotPhoto([FromForm] SpotPhotoRequest request)
         {
+            var user = await GetAuthorizedUser();
+            if (user == null)
+                return Unauthorized(new { msg = "Unautorized" });
+
+            var spot = await _context.Spots.FindAsync(request.SpotId);
+
+            if (user.Id != spot.AuthorId)
+                return BadRequest(new { msg = "You can not append photo to this spot", request.SpotId, spot.AuthorId, UserId = user.Id });
+
             var spotPhoto = new SpotPhoto
             {
                 SpotId = request.SpotId,
@@ -31,18 +39,21 @@ namespace Api.Controllers.SpotControllers
             await _context.SpotPhotos.AddAsync(spotPhoto);
             await _context.SaveChangesAsync();
 
-            return Ok(SelectSpotPhotos(request.SpotId));
+            return Ok(await SelectSpotPhotos(request.SpotId));
         }
 
         [HttpPut("Update")]
         public async Task<IActionResult> UpdateSpotPhoto([FromForm] SpotPhotoUpdateRequest request)
         {
+            var user = await GetAuthorizedUser();
+            if (user == null)
+                return Unauthorized(new { msg = "Unautorized" });
+
             var spotPhoto = await _context.SpotPhotos.FindAsync(request.SpotPhotoId);
 
             if (spotPhoto == null)
                 return BadRequest(new { msg = "Photo not found", request.SpotPhotoId });
 
-            var user = await GetAuthorizedUser();
             var spot = await _context.Spots.FindAsync(spotPhoto.SpotId);
 
             if (user.Id != spot.AuthorId)
@@ -52,23 +63,26 @@ namespace Api.Controllers.SpotControllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(SelectSpotPhotos(spotPhoto.SpotId));
+            return Ok(await SelectSpotPhotos(spotPhoto.SpotId));
         }
 
-        [HttpPut("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteSpotPhoto(int id)
         {
-            var spotPhoto = await _context.SpotPhotos.FindAsync(id);
+            var user = await GetAuthorizedUser();
+            if (user == null)
+                return Unauthorized(new { msg = "Unautorized" });
 
+            var spotPhoto = await _context.SpotPhotos.FindAsync(id);
             if (spotPhoto == null)
                 return BadRequest(new { msg = "Photo not found", SpotPhotoId = id });
 
-            var user = await GetAuthorizedUser();
             var spot = await _context.Spots.FindAsync(spotPhoto.SpotId);
 
             if (user.Id != spot.AuthorId)
                 return BadRequest(new { msg = "You can not edit this photo", SpotPhotoId = id, spot.AuthorId, UserId = user.Id });
 
+            _context.SpotPhotos.Remove(spotPhoto);
             await _context.SaveChangesAsync();
 
             return Ok(await SelectSpotPhotos(spotPhoto.SpotId));
